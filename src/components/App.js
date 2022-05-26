@@ -6,6 +6,8 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
 import Dashboard from "./Dashboard"
 import Login from "./Login"
 import PrivateRoute from "./PrivateRoute"
+import Menu from "./Menu"
+
 
 function App() {
   return (
@@ -21,6 +23,7 @@ function App() {
                 <Route path="/" element={ <PrivateRoute> <Dashboard /> </PrivateRoute>}></Route>
                 <Route path="/signup" element={<Signup/>}/>
                 <Route path="/login" element={<Login/>}/>
+                <Route path="/menu" element={<Menu/>}/>
               </Routes>
             </AuthProvider>
           </Router>
