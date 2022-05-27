@@ -1,13 +1,15 @@
 import { useState, useEffect } from "react";
 import Cards from "./Cards/Cards";
 import Cart from "./Cart/Cart";
+
 require("./MenuStyle.css");
 
 
 export default function Menu() {
   const [cartItems, setCartItems] = useState([]);
-  const { getMenu } = require("../db/db");
-  const foods = getMenu();
+  const [foods, setFoods] = useState([]);
+  const [foodName, setFoodName] = useState("");
+  const [foodPrice, setFoodPrice] = useState(0.00);
 
   const tele = window.Telegram.WebApp;
 
@@ -45,6 +47,13 @@ export default function Menu() {
     tele.MainButton.text = "Confirm Order";
     tele.MainButton.show();
   };
+
+  const AddtoMenu = (event) => {
+    event.preventDefault();
+    setFoods([...foods,{title:foodName,price:foodPrice}]);
+    console.log(foods);
+  }
+
   return (
     <>
       <h1 className="heading">PayLeh! order</h1>
@@ -56,6 +65,26 @@ export default function Menu() {
           );
         })}
       </div>
+
+      <form onSubmit={AddtoMenu}>
+        <label>Name of food:
+          <input
+          type="text"
+          name="title"
+          value={foodName}
+          onChange={(e) => setFoodName(e.target.value)}
+          />
+        </label>
+        <label>Price:
+          <input
+          type="number"
+          name="price"
+          value={foodPrice}
+          onChange={(e) => setFoodPrice(e.target.value)}
+          />
+        </label>
+        <input type="submit" />
+      </form>
     </>
   );
 }
