@@ -1,5 +1,5 @@
 const {Markup, Telegraf} = require("telegraf");
-const TOKEN = "5345883223:AAHVpuSSGZuOYdYImzakATNYi4tXw_Kyd_0";
+const TOKEN = "your_telegram_bot_token";
 const bot = new Telegraf(TOKEN);
 
 const web_link = "https://fanciful-dusk-4693ed.netlify.app/";
