@@ -10,6 +10,6 @@ In the project directory, you can run:
 
 To install necessary dependencies
 
-### `npm install`
+### `npm start`
 
 To run the web application
