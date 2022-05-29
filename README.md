@@ -16,6 +16,6 @@ To run the web application
 
 In the Bot folder, run:
 
-### 'node bot.js'
+### `node bot.js`
 
 To start the bot
