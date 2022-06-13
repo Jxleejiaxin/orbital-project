@@ -17,7 +17,7 @@ export default function Token() {
         <Card.Body>
           <h2 className="text-center mb-4">Enter Token</h2>
           <>
-            <OTPInput value={OTP} onChange={setOTP} autoFocus OTPLength={4} otpType="number" disabled={false} secure />
+            <OTPInput value={OTP} onChange={setOTP} autoFocus OTPLength={4} otpType="alphanumeric" disabled={false} secure />
           </>
           <h1>{OTP}</h1>
           <Link to="/menu" className="btn btn-primary w-100 mt-3">
