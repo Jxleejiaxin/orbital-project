@@ -3,7 +3,7 @@ import Cards from "./Cards/Cards";
 import Cart from "./Cart/Cart";
 
 
-require("./MenuStyle.css");
+
 
 
 export default function Menu() {
