@@ -1,9 +1,6 @@
 import { useState, useEffect } from "react";
-import Cards from "./Cards/Cards";
-import Cart from "./Cart/Cart";
-
-
-require("./MenuStyle.css");
+import Cards from "./Cards/Cards.jsx";
+import Cart from "./Cart/Cart.jsx";
 
 
 export default function Menu() {
