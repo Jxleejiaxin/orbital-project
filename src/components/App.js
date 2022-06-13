@@ -7,7 +7,7 @@ import Dashboard from "./Dashboard"
 import Login from "./Login"
 import PrivateRoute from "./PrivateRoute"
 import Menu from "./Menu"
-
+import Token from "./Token"
 
 function App() {
   return (
@@ -24,6 +24,7 @@ function App() {
                 <Route path="/signup" element={<Signup/>}/>
                 <Route path="/login" element={<Login/>}/>
                 <Route path="/menu" element={<Menu/>}/>
+                <Route path="/token" element={<Token/>}/>
               </Routes>
             </AuthProvider>
           </Router>
