@@ -8,6 +8,7 @@ export default function Menu() {
   const [foods, setFoods] = useState([]);
   const [foodName, setFoodName] = useState("");
   const [foodPrice, setFoodPrice] = useState(0.00);
+  const [OTP, setOTP] = useState("")
 
   const tele = window.Telegram.WebApp;
 
@@ -52,8 +53,26 @@ export default function Menu() {
     console.log(foods);
   }
 
+
+  const onClick = (event) => {
+    event.preventDefault();
+    console.log({OTP})
+  }
+
+
   return (
     <>
+      <label>Token: 
+      <input 
+      type="text" 
+      name="otp" 
+      value={OTP} 
+      onChange={(e) => setOTP(e.target.value)}
+      placeholder="Input Token"
+      />
+      <h1>{OTP}</h1>
+      <button onClick={onClick}>Click</button>
+      </label>
       <h1 className="heading">PayLeh! order</h1>
       <Cart cartItems={cartItems} onCheckout={onCheckout} />
       <div className="cards__container">
