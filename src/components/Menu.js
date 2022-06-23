@@ -3,7 +3,7 @@ import { Image } from "react-bootstrap";
 import Cards from "./Cards/Cards.jsx";
 import Cart from "./Cart/Cart.jsx";
 import app from "../firebase.js";
-import {getFirestore, doc, setDoc, getDoc, updateDoc, onSnapshot, arrayUnion } from "firebase/firestore";
+import {getFirestore, doc, setDoc, getDoc, updateDoc, onSnapshot, arrayUnion} from "firebase/firestore";
 
 export default function Menu() {
   const [cartItems, setCartItems] = useState([]);
@@ -47,12 +47,14 @@ export default function Menu() {
     }
   };
 
-  //method to add food into shared menu
+  //method to add food into shared menu(saved on firestore)
   const AddtoMenu = async (event) => {
     event.preventDefault();
     const orderRef = doc(db, "tokens", OTP);
     const orderSnap = await getDoc(orderRef);
-    if (OTP.length !== 4 || !orderSnap.exists()) {
+    const exist = foods.find((x) => x.title === foodName);
+    //order has not been created or food is already in menu
+    if (OTP.length !== 4 || !orderSnap.exists() || exist) {
       return;
     } else {
       await updateDoc(orderRef, {
@@ -77,6 +79,7 @@ export default function Menu() {
 
   //finalizes the order, writing to firestore
   //if previous order exists, will overwrite that order
+  //unsubscribes listener
   const onCheckout = () => {
     const userRef = doc(db, "tokens", OTP, "users", user);
     setDoc(userRef, {cart:cartItems});
@@ -101,9 +104,7 @@ export default function Menu() {
         <h1>{OTP}</h1>
         <button onClick={onClick}>Click</button>
       </label>
-
-
-      <h1 className="heading">PayLeh! Order</h1>
+      <h1 className="heading">PayLeh! order</h1>
       <Cart cartItems={cartItems} onCheckout={onCheckout} />
       <div className="cards__container">
         {foods.map((food) => {
@@ -117,7 +118,7 @@ export default function Menu() {
           );
         })}
       </div>
-      
+
       <form onSubmit={AddtoMenu}>
         <label>
           Telegram handle:
