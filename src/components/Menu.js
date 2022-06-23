@@ -1,13 +1,8 @@
-<<<<<<< HEAD
 import { useState } from "react";
-=======
-import { useState, useEffect } from "react";
-import { Image } from "react-bootstrap";
->>>>>>> efc78956d1ff0cdec9b2f2b77bb96104dccab591
 import Cards from "./Cards/Cards.jsx";
 import Cart from "./Cart/Cart.jsx";
 import app from "../firebase.js";
-import {getFirestore, doc, setDoc, getDoc, updateDoc, onSnapshot, arrayUnion } from "firebase/firestore";
+import {getFirestore, doc, setDoc, getDoc, updateDoc, onSnapshot, arrayUnion} from "firebase/firestore";
 
 export default function Menu() {
   const [cartItems, setCartItems] = useState([]);
@@ -51,12 +46,14 @@ export default function Menu() {
     }
   };
 
-  //method to add food into shared menu
+  //method to add food into shared menu(saved on firestore)
   const AddtoMenu = async (event) => {
     event.preventDefault();
     const orderRef = doc(db, "tokens", OTP);
     const orderSnap = await getDoc(orderRef);
-    if (OTP.length !== 4 || !orderSnap.exists()) {
+    const exist = foods.find((x) => x.title === foodName);
+    //order has not been created or food is already in menu
+    if (OTP.length !== 4 || !orderSnap.exists() || exist) {
       return;
     } else {
       await updateDoc(orderRef, {
@@ -81,6 +78,7 @@ export default function Menu() {
 
   //finalizes the order, writing to firestore
   //if previous order exists, will overwrite that order
+  //unsubscribes listener
   const onCheckout = () => {
     const userRef = doc(db, "tokens", OTP, "users", user);
     setDoc(userRef, {cart:cartItems});
@@ -90,7 +88,6 @@ export default function Menu() {
 
   return (
     <>
-<<<<<<< HEAD
       <label>
         Token:
         <input
@@ -102,26 +99,8 @@ export default function Menu() {
         />
         <h1>{OTP}</h1>
         <button onClick={onClick}>Click</button>
-=======
-      <p>
-        <Image src="/logo.png" alt="" width="200" className="rounded mx-auto d-block"/>
-      </p>
-      <label>Token: 
-      <input 
-      
-      type="text" 
-      name="otp" 
-      value={OTP} 
-      onChange={(e) => setOTP(e.target.value)}
-      placeholder="Input Token"
-      />
-      <h1>{OTP}</h1>
-      <button onClick={onClick}>Click</button>
->>>>>>> efc78956d1ff0cdec9b2f2b77bb96104dccab591
       </label>
-
-
-      <h1 className="heading">PayLeh! Order</h1>
+      <h1 className="heading">PayLeh! order</h1>
       <Cart cartItems={cartItems} onCheckout={onCheckout} />
       <div className="cards__container">
         {foods.map((food) => {
@@ -135,7 +114,7 @@ export default function Menu() {
           );
         })}
       </div>
-      
+
       <form onSubmit={AddtoMenu}>
         <label>
           Telegram handle:
