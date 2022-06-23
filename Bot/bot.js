@@ -43,6 +43,11 @@ bot.command("startneworder", async (ctx) => {
   currentOrder.active = true;
   currentOrder.owner = ctx.from.id;
   currentOrder.token = await generateToken(4);
+  await setDoc(doc(db,"tokens",currentOrder.token), {
+    status: "open",
+    //users: [],
+    cart: []
+  })
   ctx.reply(
     `Order started! Proceed to the webapp and input ${currentOrder.token} to join!`,
     Markup.inlineKeyboard(
@@ -83,7 +88,7 @@ bot.command("resetorder", async (ctx) => {
 bot.command("forcereset", (ctx) => {
   resetOrder();
   const currentOrderRef = doc(db, "orders", currentOrder.token);
-  deleteCollection(db, currentOrderRef, 1);
+  //deleteCollection(db, currentOrderRef, 1);
   ctx.reply("Order cleared, start new order by sending /startneworder");
 })
 

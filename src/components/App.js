@@ -7,7 +7,6 @@ import Dashboard from "./Dashboard.js"
 import Login from "./Login.js"
 import PrivateRoute from "./PrivateRoute.js"
 import Menu from "./Menu.js"
-import Token from "./Token.js"
 
 function App() {
   return (
@@ -24,7 +23,6 @@ function App() {
                 <Route path="/signup" element={<Signup/>}/>
                 <Route path="/login" element={<Login/>}/>
                 <Route path="/menu" element={<Menu/>}/>
-                <Route path="/token" element={<Token/>}/>
               </Routes>
             </AuthProvider>
           </Router>
