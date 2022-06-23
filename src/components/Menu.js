@@ -1,4 +1,9 @@
+<<<<<<< HEAD
 import { useState } from "react";
+=======
+import { useState, useEffect } from "react";
+import { Image } from "react-bootstrap";
+>>>>>>> efc78956d1ff0cdec9b2f2b77bb96104dccab591
 import Cards from "./Cards/Cards.jsx";
 import Cart from "./Cart/Cart.jsx";
 import app from "../firebase.js";
@@ -85,6 +90,7 @@ export default function Menu() {
 
   return (
     <>
+<<<<<<< HEAD
       <label>
         Token:
         <input
@@ -96,8 +102,26 @@ export default function Menu() {
         />
         <h1>{OTP}</h1>
         <button onClick={onClick}>Click</button>
+=======
+      <p>
+        <Image src="/logo.png" alt="" width="200" className="rounded mx-auto d-block"/>
+      </p>
+      <label>Token: 
+      <input 
+      
+      type="text" 
+      name="otp" 
+      value={OTP} 
+      onChange={(e) => setOTP(e.target.value)}
+      placeholder="Input Token"
+      />
+      <h1>{OTP}</h1>
+      <button onClick={onClick}>Click</button>
+>>>>>>> efc78956d1ff0cdec9b2f2b77bb96104dccab591
       </label>
-      <h1 className="heading">PayLeh! order</h1>
+
+
+      <h1 className="heading">PayLeh! Order</h1>
       <Cart cartItems={cartItems} onCheckout={onCheckout} />
       <div className="cards__container">
         {foods.map((food) => {
@@ -111,7 +135,7 @@ export default function Menu() {
           );
         })}
       </div>
-
+      
       <form onSubmit={AddtoMenu}>
         <label>
           Telegram handle:

@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import Button from "../Button/Button";
-
+import './CardStyle.css'
 
 function Cards({food,onAdd,onRemove}) {
   const [count, setCount] = useState(0);
@@ -16,7 +16,7 @@ function Cards({food,onAdd,onRemove}) {
   }
 
   return (
-    <div className="card">
+    <div className="cardd">
       <span
         className={`${count !== 0 ? "card__badge" : "card__badge--hidden"}`}
       >{count}
