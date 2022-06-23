@@ -1,5 +1,5 @@
 import React, { useRef, useState } from 'react'
-import { Form, Button, Card, Alert } from 'react-bootstrap'
+import { Form, Button, Card, Alert, Image } from 'react-bootstrap'
 import { useAuth } from '../contexts/AuthContext.js'
 import { Link, useNavigate } from 'react-router-dom'
 
@@ -33,6 +33,9 @@ export default function Signup() {
 
     return (
       <>
+        <p>
+          <Image src="/logo.png" alt="" width="200" className="rounded mx-auto d-block"/>
+        </p>
         <Card>
           <Card.Body>
             <h2 className="text-center mb-4">Sign Up</h2>

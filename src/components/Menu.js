@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { Image } from "react-bootstrap";
 import Cards from "./Cards/Cards.jsx";
 import Cart from "./Cart/Cart.jsx";
 
@@ -62,8 +63,12 @@ export default function Menu() {
 
   return (
     <>
+      <p>
+        <Image src="/logo.png" alt="" width="200" className="rounded mx-auto d-block"/>
+      </p>
       <label>Token: 
       <input 
+      
       type="text" 
       name="otp" 
       value={OTP} 
@@ -73,7 +78,9 @@ export default function Menu() {
       <h1>{OTP}</h1>
       <button onClick={onClick}>Click</button>
       </label>
-      <h1 className="heading">PayLeh! order</h1>
+
+
+      <h1 className="heading">PayLeh! Order</h1>
       <Cart cartItems={cartItems} onCheckout={onCheckout} />
       <div className="cards__container">
         {foods.map((food) => {
@@ -82,7 +89,7 @@ export default function Menu() {
           );
         })}
       </div>
-
+      
       <form onSubmit={AddtoMenu}>
         <label>Name of food:
           <input

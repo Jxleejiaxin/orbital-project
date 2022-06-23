@@ -1,13 +1,10 @@
 import React, { useState } from "react"
-import { Card, Button, Alert } from "react-bootstrap"
+import { Card } from "react-bootstrap"
 import { useAuth } from "../contexts/AuthContext.js"
 import { Link, useNavigate } from "react-router-dom"
 import OTPInput, { ResendOTP } from 'otp-input-react'
 
 export default function Token() {
-  const [error, setError] = useState("")
-  const { currentUser, logout } = useAuth()
-  const navigate = useNavigate()
   const [OTP, setOTP] = useState("")
 
 
@@ -26,6 +23,6 @@ export default function Token() {
         </Card.Body>
       </Card>
     </>
-  )
+  );
 }
 

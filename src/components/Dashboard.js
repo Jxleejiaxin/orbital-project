@@ -1,5 +1,5 @@
 import React, { useState } from "react"
-import { Card, Button, Alert } from "react-bootstrap"
+import { Card, Button, Alert, Image } from "react-bootstrap"
 import { useAuth } from "../contexts/AuthContext.js"
 import { Link, useNavigate } from "react-router-dom"
 
@@ -22,12 +22,15 @@ export default function Dashboard() {
 
   return (
     <>
+      <p>
+        <Image src="/logo.png" alt="" width="200" className="rounded mx-auto d-block"/>
+      </p>
       <Card>
         <Card.Body>
           <h2 className="text-center mb-4">Profile</h2>
           {error && <Alert variant="danger">{error}</Alert>}
           <strong>Email:</strong> {currentUser.email}
-          <Link to="/token" className="btn btn-primary w-100 mt-3">
+          <Link to="/menu" className="btn btn-primary w-100 mt-3">
             Join Group Order
           </Link>
         </Card.Body>
