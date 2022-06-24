@@ -23,7 +23,7 @@ export default function Dashboard() {
   return (
     <>
       <p>
-        <Image src="/logo.png" alt="" width="200" className="rounded mx-auto d-block"/>
+        <Image src="/logo.png" alt="" width="150" className="rounded mx-auto d-block"/>
       </p>
       <Card>
         <Card.Body>

@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Image, Card, Form, Button, Container, Row, Col, InputGroup, FormControl} from "react-bootstrap";
+import { Image, Card, Form, Button, InputGroup, FormControl} from "react-bootstrap";
 import Cards from "./Cards/Cards.jsx";
 import Cart from "./Cart/Cart.jsx";
 import app from "../firebase.js";
