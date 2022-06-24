@@ -127,12 +127,16 @@ export default function Menu() {
         <Form onSubmit={AddtoMenu}>
           <Form.Label>
             Telegram handle:
-            <Form.Control
-              type="text"
-              name="title"
-              value={user}
-              onChange={(e) => setUser(e.target.value)}
-            />
+            <InputGroup className="mb-2">
+              <InputGroup.Text id="basic-addon1">@</InputGroup.Text>
+              <FormControl
+                size="sm"
+                type="text"
+                name="title"
+                value={user}
+                onChange={(e) => setUser(e.target.value)}
+              />
+            </InputGroup>
           </Form.Label>
           <Form.Label>
             Name of food:
@@ -154,7 +158,9 @@ export default function Menu() {
               onChange={(e) => setFoodPrice(e.target.value)}
             />
           </Form.Label>
-          <Form.Control type="submit" />
+          <div className="w-100 text-center mt-2"> 
+            <Button type="submit"> Select Food </Button>
+          </div>
         </Form>
       </Card>
 
