@@ -94,6 +94,7 @@ export default function Menu() {
       setDoc(userRef, {cart:cartItems});
       setOTP("");
       unsubscribe();
+      setCartItems([]);
     }
   };
 
