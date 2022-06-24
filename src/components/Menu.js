@@ -1,5 +1,4 @@
-import { useState, useEffect } from "react";
-import { Image, Card, Form, Button, Container, Row, Col, InputGroup, FormControl} from "react-bootstrap";
+import { useState } from "react";
 import Cards from "./Cards/Cards.jsx";
 import Cart from "./Cart/Cart.jsx";
 import app from "../firebase.js";
@@ -49,12 +48,15 @@ export default function Menu() {
 
   //method to add food into shared menu(saved on firestore)
   const AddtoMenu = async (event) => {
+    if (foodName === "" || foodPrice) {
+      return;
+    }
     event.preventDefault();
     const orderRef = doc(db, "tokens", OTP);
     const orderSnap = await getDoc(orderRef);
     const exist = foods.find((x) => x.title === foodName);
-    //order has not been created or food is already in menu
-    if (OTP.length !== 4 || !orderSnap.exists() || exist) {
+    //order has not been created or is closed or food is already in menu
+    if (!orderSnap.exists() || exist || orderSnap.data().status === "closed") {
       return;
     } else {
       await updateDoc(orderRef, {
@@ -64,6 +66,7 @@ export default function Menu() {
     }
   };
 
+  //initiates listener (unsubscribe() doesnt work in onCheckout if unsubscribe is simply set to null)
   var unsubscribe = onSnapshot(doc(db,"tokens","1"));
   unsubscribe(); 
 
@@ -80,85 +83,80 @@ export default function Menu() {
   //finalizes the order, writing to firestore
   //if previous order exists, will overwrite that order
   //unsubscribes listener
-  const onCheckout = () => {
-    const userRef = doc(db, "tokens", OTP, "users", user);
-    setDoc(userRef, {cart:cartItems});
-    setOTP("");
-    unsubscribe();
+  const onCheckout = async () => {
+    const orderRef = doc(db, "tokens", OTP);
+    const orderSnap = await getDoc(orderRef);
+    if (orderSnap.data().status === "closed") {
+      return;
+    } else {
+      const userRef = doc(db, "tokens", OTP, "users", user);
+      setDoc(userRef, {cart:cartItems});
+      setOTP("");
+      unsubscribe();
+    }
   };
 
   return (
     <>
-
-      <p>
-        <Image src="/logo.png" alt="" width="200" className="rounded mx-auto d-block"/>
-      </p>
-      
-      <InputGroup className="mb-3">
-        <Form.Control
+      <label>
+        Token:
+        <input
           type="text"
-          className="form-control"
           name="otp"
           value={OTP}
           onChange={(e) => setOTP(e.target.value)}
           placeholder="Input Token"
         />
-        <Button variant="outline-secondary" id="button-addon2" type="submit" onClick={onClick}>
-          Join 
-        </Button>
-      </InputGroup>
-      
-      <Card className="text-center" bg="light">
-        <Card.Header as="h5">PayLeh! Order</Card.Header>
-        <Cart cartItems={cartItems} onCheckout={onCheckout} />
-        <div className="cards__container">
-          {foods.map((food) => {
-            return (
-              <Cards
-                food={food}
-                key={food.title}
-                onAdd={onAdd}
-                onRemove={onRemove}
-              />
-            );
-          })}
-        </div>
+        <h1>{OTP}</h1>
+        <button onClick={onClick}>Click</button>
+      </label>
+      <h1 className="heading">PayLeh! order</h1>
+      <Cart cartItems={cartItems} onCheckout={onCheckout} />
+      <div className="cards__container">
+        {foods.map((food) => {
+          return (
+            <Cards
+              food={food}
+              key={food.title}
+              onAdd={onAdd}
+              onRemove={onRemove}
+            />
+          );
+        })}
+      </div>
 
-        <Form onSubmit={AddtoMenu}>
-          <Form.Label>
-            Telegram handle:
-            <Form.Control
-              type="text"
-              name="title"
-              value={user}
-              onChange={(e) => setUser(e.target.value)}
-            />
-          </Form.Label>
-          <Form.Label>
-            Name of food:
-            <Form.Control
-              type="text"
-              name="title"
-              value={foodName}
-              onChange={(e) => setFoodName(e.target.value)}
-            />
-          </Form.Label>
-          <Form.Label>
-            Price:
-            <Form.Control
-              type="number"
-              name="price"
-              min="0"
-              step="0.1"
-              value={foodPrice}
-              onChange={(e) => setFoodPrice(e.target.value)}
-            />
-          </Form.Label>
-          <Form.Control type="submit" />
-        </Form>
-      </Card>
-
-      
+      <form onSubmit={AddtoMenu}>
+        <label>
+          Telegram handle:
+          <input
+            type="text"
+            name="title"
+            value={user}
+            onChange={(e) => setUser(e.target.value)}
+          />
+        </label>
+        <label>
+          Name of food:
+          <input
+            type="text"
+            name="title"
+            value={foodName}
+            onChange={(e) => setFoodName(e.target.value)}
+          />
+        </label>
+        <label>
+          Price:
+          <input
+            type="number"
+            name="price"
+            min="0.01"
+            step="0.01"
+            value={foodPrice}
+            onChange={(e) => setFoodPrice(e.target.value)}
+          />
+        </label>
+        <input type="submit" />
+      </form>
     </>
   );
 }
