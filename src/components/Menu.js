@@ -91,7 +91,7 @@ export default function Menu() {
     <>
 
       <p>
-        <Image src="/logo.png" alt="" width="200" className="rounded mx-auto d-block"/>
+        <Image src="/logo.png" alt="" width="150" className="rounded mx-auto d-block"/>
       </p>
       
       <InputGroup className="mb-3">
@@ -158,8 +158,8 @@ export default function Menu() {
               onChange={(e) => setFoodPrice(e.target.value)}
             />
           </Form.Label>
-          <div className="w-100 text-center mt-2"> 
-            <Button type="submit"> Select Food </Button>
+          <div> 
+            <Button type="submit" size="sm"> Select</Button>
           </div>
         </Form>
       </Card>

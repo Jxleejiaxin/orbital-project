@@ -34,11 +34,11 @@ export default function Signup() {
     return (
       <>
         <p>
-          <Image src="/logo.png" alt="" width="200" className="rounded mx-auto d-block"/>
+          <Image src="/logo.png" alt="" width="150" className="rounded mx-auto d-block"/>
         </p>
-        <Card>
+        <Card bg="light">
+          <Card.Header as="h2" className="text-center mb-4">Sign Up</Card.Header>
           <Card.Body>
-            <h2 className="text-center mb-4">Sign Up</h2>
             {error && <Alert variant="danger">{error}</Alert>}
             <Form onSubmit={handleSubmit}>
               <Form.Group id="email">
