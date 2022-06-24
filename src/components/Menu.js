@@ -49,7 +49,7 @@ export default function Menu() {
 
   //method to add food into shared menu(saved on firestore)
   const AddtoMenu = async (event) => {
-    if (foodName === "" || foodPrice) {
+    if (foodName === "") {
       return;
     }
     event.preventDefault();
