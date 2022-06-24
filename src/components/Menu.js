@@ -49,12 +49,15 @@ export default function Menu() {
 
   //method to add food into shared menu(saved on firestore)
   const AddtoMenu = async (event) => {
+    if (foodName === "" || foodPrice) {
+      return;
+    }
     event.preventDefault();
     const orderRef = doc(db, "tokens", OTP);
     const orderSnap = await getDoc(orderRef);
     const exist = foods.find((x) => x.title === foodName);
-    //order has not been created or food is already in menu
-    if (OTP.length !== 4 || !orderSnap.exists() || exist) {
+    //order has not been created or is closed or food is already in menu
+    if (!orderSnap.exists() || exist || orderSnap.data().status === "closed") {
       return;
     } else {
       await updateDoc(orderRef, {
@@ -64,6 +67,7 @@ export default function Menu() {
     }
   };
 
+  //initiates listener (unsubscribe() doesnt work in onCheckout if unsubscribe is simply set to null)
   var unsubscribe = onSnapshot(doc(db,"tokens","1"));
   unsubscribe(); 
 
@@ -80,11 +84,17 @@ export default function Menu() {
   //finalizes the order, writing to firestore
   //if previous order exists, will overwrite that order
   //unsubscribes listener
-  const onCheckout = () => {
-    const userRef = doc(db, "tokens", OTP, "users", user);
-    setDoc(userRef, {cart:cartItems});
-    setOTP("");
-    unsubscribe();
+  const onCheckout = async () => {
+    const orderRef = doc(db, "tokens", OTP);
+    const orderSnap = await getDoc(orderRef);
+    if (orderSnap.data().status === "closed") {
+      return;
+    } else {
+      const userRef = doc(db, "tokens", OTP, "users", user);
+      setDoc(userRef, {cart:cartItems});
+      setOTP("");
+      unsubscribe();
+    }
   };
 
   return (

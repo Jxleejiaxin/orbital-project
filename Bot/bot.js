@@ -1,4 +1,12 @@
-import { getFirestore, doc, setDoc, getDoc } from "firebase/firestore";
+import {
+  getFirestore,
+  doc,
+  setDoc,
+  getDoc,
+  updateDoc,
+  collection,
+  getDocs,
+} from "firebase/firestore";
 import { Markup, Telegraf } from "telegraf";
 import app from "../src/firebase.js";
 
@@ -6,10 +14,12 @@ const TOKEN = "5345883223:AAHVpuSSGZuOYdYImzakATNYi4tXw_Kyd_0";
 const bot = new Telegraf(TOKEN);
 const db = getFirestore(app);
 
-//state of order in group chats
+//state of order in the group chat
+//status can be inactive, active, closed, payment
 let currentOrder = {
-  active: false,
+  status: "inactive",
   owner: null,
+  ownerName: null,
   token: "",
 };
 
@@ -31,23 +41,30 @@ bot.start((ctx) => {
 });
 
 bot.command("startneworder", async (ctx) => {
-  console.log(currentOrder.active);
-  if (currentOrder.active) {
-    ctx.reply("There is an ongoing order! Please send /resetorder to start a new order.");
+  if (currentOrder.status === "active") {
+    ctx.reply(
+      "There is an ongoing order! Please send /resetorder to start a new order."
+    );
+    return false;
+  }
+  if (currentOrder.status === "payment") {
+    ctx.reply(
+      "Order payment is currently in progress. Send /paid if all payments are done"
+    );
     return false;
   }
   if (ctx.message.chat.type === "private") {
     ctx.reply("This is only available in group chats");
     return false;
   }
-  currentOrder.active = true;
+  currentOrder.status = "active";
   currentOrder.owner = ctx.from.id;
+  currentOrder.ownerName = ctx.from.first_name;
   currentOrder.token = await generateToken(4);
-  await setDoc(doc(db,"tokens",currentOrder.token), {
+  await setDoc(doc(db, "tokens", currentOrder.token), {
     status: "open",
-    //users: [],
-    cart: []
-  })
+    cart: [],
+  });
   ctx.reply(
     `Order started! Proceed to the webapp and input ${currentOrder.token} to join!`,
     Markup.inlineKeyboard(
@@ -62,43 +79,105 @@ bot.command("startneworder", async (ctx) => {
   );
 });
 
-//bot.command("currentorder", (ctx) => {
-  //displays list of orders and total price
-  //return;
-//});
+bot.command("closeorder", async (ctx) => {
+  if (currentOrder.status === "active" && ctx.from.id === currentOrder.owner) {
+    await updateDoc(doc(db, "tokens", currentOrder.token), {
+      status: "closed",
+    });
+    currentOrder.status = "closed";
+    ctx.reply("Order closed.");
+  } else if (currentOrder.status === "payment") {
+    ctx.reply("Payment in progress. Order cannot be open/closed.");
+  } else {
+    ctx.reply(
+      "Please be the order creator or have an order created to invoke this command."
+    );
+  }
+});
+
+bot.command("openorder", async (ctx) => {
+  if (currentOrder.status === "closed" && ctx.from.id === currentOrder.owner) {
+    await updateDoc(doc(db, "tokens", currentOrder.token), {
+      status: "open",
+    });
+    currentOrder.status = "active";
+    ctx.reply(
+      `Order open! Proceed to the webapp and input ${currentOrder.token} to join!`,
+      Markup.inlineKeyboard(
+        [
+          Markup.button.url(
+            "WebApp",
+            "https://fanciful-dusk-4693ed.netlify.app/"
+          ),
+        ],
+        { columns: 1 }
+      )
+    );
+  } else if (currentOrder.status === "payment") {
+    ctx.reply("Payment in progress. Order cannot be open/closed.");
+  } else {
+    ctx.reply(
+      "Please be the order creator or have an order created to invoke this command."
+    );
+  }
+});
+
+//sets bot order status to payment
+bot.command("confirmorder", async (ctx) => {
+  if (currentOrder.status === "active" || currentOrder.status === "closed") {
+    var orderString = `Please pay ${currentOrder.ownerName} as follows: \n`;
+    const userSnapshot = await getDocs(
+      collection(db, "tokens", currentOrder.token, "users")
+    );
+    userSnapshot.forEach((doc) => {
+      orderString += doc.id + ": ";
+      const cartItems = doc.data().cart;
+      const totalPrice = cartItems.reduce(
+        (sum, item) => sum + item.price * item.quantity,
+        0
+      );
+      orderString += totalPrice + "\n";
+    });
+    currentOrder.status = "payment"
+    ctx.replyWithPoll(orderString, ['Paid', 'Did not order'], {is_anonymous: false});
+  } else {
+    ctx.reply("No order to confirm/payment in progress.");
+  }
+});
+
+//sets order status to inactive, deletes current order in database
+//(future)adds cart to respective telegram handle in database
+bot.command("paid", (ctx) => {
+  resetOrder();
+});
+
 bot.command("token", (ctx) => {
   ctx.reply(`${currentOrder.token}`);
-})
+});
 
+//display all commands
 bot.command("help", (ctx) => {});
 
 bot.command("resetorder", async (ctx) => {
   if (ctx.from.id !== currentOrder.owner) {
-    ctx.reply("You are not the creator of the order!");
+    ctx.reply(
+      "No order active or you are not the creator of the order! Send /forcereset if necessary."
+    );
     return false;
+  } else if (currentOrder.status === "payment") {
+    ctx.reply("Payment is still pending. Please send /paid to complete the order process.")
   } else {
-    console.log(currentOrder.token);
-    const currentOrderRef = getDoc(doc(db, "orders", currentOrder.token));
-    //deleteCollection(db, currentOrderRef, 1);
+    //deletecollection
     resetOrder();
     ctx.reply("Order cleared, start new order by sending /startneworder");
   }
 });
 
 bot.command("forcereset", (ctx) => {
+  //deletecollection
   resetOrder();
   const currentOrderRef = doc(db, "orders", currentOrder.token);
-  //deleteCollection(db, currentOrderRef, 1);
   ctx.reply("Order cleared, start new order by sending /startneworder");
-})
-
-//test command to addfood
-bot.command("addfood", (ctx) => {
-  const foodRef = doc(db, "orders", currentOrder.token, "users", ctx.from.id);
-  setDoc(foodRef, [
-    {title:"chicken", price:4.50, quantity:1},
-    {title:"nasi lemak", price:3.50, quantity:2}
-  ])
 });
 
 bot.launch();
@@ -126,36 +205,3 @@ const resetOrder = () => {
     token: "",
   };
 };
-
-async function deleteCollection(db, collectionPath, batchSize) {
-  const collectionRef = db.collection(collectionPath);
-  const query = collectionRef.orderBy("__name__").limit(batchSize);
-
-  return new Promise((resolve, reject) => {
-    deleteQueryBatch(db, query, resolve).catch(reject);
-  });
-}
-
-async function deleteQueryBatch(db, query, resolve) {
-  const snapshot = await query.get();
-
-  const batchSize = snapshot.size;
-  if (batchSize === 0) {
-    // When there are no documents left, we are done
-    resolve();
-    return;
-  }
-
-  // Delete documents in a batch
-  const batch = db.batch();
-  snapshot.docs.forEach((doc) => {
-    batch.delete(doc.ref);
-  });
-  await batch.commit();
-
-  // Recurse on the next process tick, to avoid
-  // exploding the stack.
-  process.nextTick(() => {
-    deleteQueryBatch(db, query, resolve);
-  });
-}
