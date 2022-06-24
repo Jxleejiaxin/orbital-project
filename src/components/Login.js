@@ -38,15 +38,17 @@ export default function Login() {
               <Form onSubmit={handleSubmit}>
                 <Form.Group id="email">
                   <Form.Label>Email</Form.Label>
-                  <Form.Control type="email" ref={emailRef} required />
+                  <Form.Control type="email" ref={emailRef} required placeholder="Enter your email"/>
                 </Form.Group>
                 <Form.Group id="password">
                   <Form.Label>Password</Form.Label>
-                  <Form.Control type="password" ref={passwordRef} required />
+                  <Form.Control type="password" ref={passwordRef} required placeholder="Enter your password"/>
                 </Form.Group>
-                <Button disabled={loading} className="w-100 mt-2" type="submit">
-                  Log In
-                </Button>
+                <div className="w-100 text-center mt-2">
+                  <Button disabled={loading} type="submit">
+                    Log In
+                  </Button>
+                </div>
               </Form>
             </Card.Body>
           </Card>

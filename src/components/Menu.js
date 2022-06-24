@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Image } from "react-bootstrap";
+import { Image, Card, Form, Button, Container, Row, Col, InputGroup, FormControl} from "react-bootstrap";
 import Cards from "./Cards/Cards.jsx";
 import Cart from "./Cart/Cart.jsx";
 import app from "../firebase.js";
@@ -89,68 +89,76 @@ export default function Menu() {
 
   return (
     <>
+
       <p>
         <Image src="/logo.png" alt="" width="200" className="rounded mx-auto d-block"/>
       </p>
-      <label>
-        Token:
-        <input
+      
+      <InputGroup className="mb-3">
+        <Form.Control
           type="text"
+          className="form-control"
           name="otp"
           value={OTP}
           onChange={(e) => setOTP(e.target.value)}
           placeholder="Input Token"
         />
-        <h1>{OTP}</h1>
-        <button onClick={onClick}>Click</button>
-      </label>
-      <h1 className="heading">PayLeh! order</h1>
-      <Cart cartItems={cartItems} onCheckout={onCheckout} />
-      <div className="cards__container">
-        {foods.map((food) => {
-          return (
-            <Cards
-              food={food}
-              key={food.title}
-              onAdd={onAdd}
-              onRemove={onRemove}
-            />
-          );
-        })}
-      </div>
+        <Button variant="outline-secondary" id="button-addon2" type="submit" onClick={onClick}>
+          Join 
+        </Button>
+      </InputGroup>
+      
+      <Card className="text-center" bg="light">
+        <Card.Header as="h5">PayLeh! Order</Card.Header>
+        <Cart cartItems={cartItems} onCheckout={onCheckout} />
+        <div className="cards__container">
+          {foods.map((food) => {
+            return (
+              <Cards
+                food={food}
+                key={food.title}
+                onAdd={onAdd}
+                onRemove={onRemove}
+              />
+            );
+          })}
+        </div>
 
-      <form onSubmit={AddtoMenu}>
-        <label>
-          Telegram handle:
-          <input
-            type="text"
-            name="title"
-            value={user}
-            onChange={(e) => setUser(e.target.value)}
-          />
-        </label>
-        <label>
-          Name of food:
-          <input
-            type="text"
-            name="title"
-            value={foodName}
-            onChange={(e) => setFoodName(e.target.value)}
-          />
-        </label>
-        <label>
-          Price:
-          <input
-            type="number"
-            name="price"
-            min="0"
-            step="0.01"
-            value={foodPrice}
-            onChange={(e) => setFoodPrice(e.target.value)}
-          />
-        </label>
-        <input type="submit" />
-      </form>
+        <Form onSubmit={AddtoMenu}>
+          <Form.Label>
+            Telegram handle:
+            <Form.Control
+              type="text"
+              name="title"
+              value={user}
+              onChange={(e) => setUser(e.target.value)}
+            />
+          </Form.Label>
+          <Form.Label>
+            Name of food:
+            <Form.Control
+              type="text"
+              name="title"
+              value={foodName}
+              onChange={(e) => setFoodName(e.target.value)}
+            />
+          </Form.Label>
+          <Form.Label>
+            Price:
+            <Form.Control
+              type="number"
+              name="price"
+              min="0"
+              step="0.1"
+              value={foodPrice}
+              onChange={(e) => setFoodPrice(e.target.value)}
+            />
+          </Form.Label>
+          <Form.Control type="submit" />
+        </Form>
+      </Card>
+
+      
     </>
   );
 }
