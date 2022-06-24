@@ -98,19 +98,9 @@ export default function Menu() {
 
   return (
     <>
-<<<<<<< HEAD
       <label>
         Token:
         <input
-=======
-
-      <p>
-        <Image src="/logo.png" alt="" width="150" className="rounded mx-auto d-block"/>
-      </p>
-      
-      <InputGroup className="mb-3">
-        <Form.Control
->>>>>>> 3dc4eccb6d9fb3a1414f0b2d056424409ad00b03
           type="text"
           name="otp"
           value={OTP}
@@ -168,49 +158,6 @@ export default function Menu() {
         </label>
         <input type="submit" />
       </form>
-=======
-        <Form onSubmit={AddtoMenu}>
-          <Form.Label>
-            Telegram handle:
-            <InputGroup className="mb-2">
-              <InputGroup.Text id="basic-addon1">@</InputGroup.Text>
-              <FormControl
-                size="sm"
-                type="text"
-                name="title"
-                value={user}
-                onChange={(e) => setUser(e.target.value)}
-              />
-            </InputGroup>
-          </Form.Label>
-          <Form.Label>
-            Name of food:
-            <Form.Control
-              type="text"
-              name="title"
-              value={foodName}
-              onChange={(e) => setFoodName(e.target.value)}
-            />
-          </Form.Label>
-          <Form.Label>
-            Price:
-            <Form.Control
-              type="number"
-              name="price"
-              min="0"
-              step="0.1"
-              value={foodPrice}
-              onChange={(e) => setFoodPrice(e.target.value)}
-            />
-          </Form.Label>
-          <div> 
-            <Button type="submit" size="sm"> Select</Button>
-          </div>
-        </Form>
-      </Card>
-
-      
->>>>>>> 3dc4eccb6d9fb3a1414f0b2d056424409ad00b03
     </>
   );
 }
