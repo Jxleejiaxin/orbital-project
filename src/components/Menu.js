@@ -95,6 +95,7 @@ export default function Menu() {
       setOTP("");
       unsubscribe();
       setCartItems([]);
+      setFoods([]);
     }
   };
 
@@ -163,8 +164,8 @@ export default function Menu() {
             <Form.Control
               type="number"
               name="price"
-              min="0"
-              step="0.1"
+              min="0.01"
+              step="0.01"
               value={foodPrice}
               onChange={(e) => setFoodPrice(e.target.value)}
             />

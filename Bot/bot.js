@@ -11,7 +11,7 @@ import {
 import { Markup, Telegraf } from "telegraf";
 import app from "../src/firebase.js";
 
-const TOKEN = "YOUR_TELEGRAM_BOT_TOKEN";
+const TOKEN = "5345883223:AAHVpuSSGZuOYdYImzakATNYi4tXw_Kyd_0";
 const bot = new Telegraf(TOKEN);
 const db = getFirestore(app);
 
@@ -158,8 +158,8 @@ bot.command("paid", async (ctx) => {
     const userSnapshot = await getDocs(
       collection(db, "tokens", currentOrder.token, "users")
     );
-    userSnapshot.forEach((doc) => {
-      deleteDoc(doc);
+    userSnapshot.forEach((cart) => {
+      deleteDoc(doc(db,"tokens",currentOrder.token,"users",cart.id));
     })
     await deleteDoc(doc(db,"tokens",currentOrder.token));
     resetOrder();
@@ -188,8 +188,8 @@ bot.command("resetorder", async (ctx) => {
     const userSnapshot = await getDocs(
       collection(db, "tokens", currentOrder.token, "users")
     );
-    userSnapshot.forEach((doc) => {
-      deleteDoc(doc);
+    userSnapshot.forEach((cart) => {
+      deleteDoc(doc(db,"tokens",currentOrder.token,"users",cart.id));
     })
     await deleteDoc(doc(db,"tokens",currentOrder.token));
     resetOrder();
@@ -202,8 +202,8 @@ bot.command("forcereset", async (ctx) => {
   const userSnapshot = await getDocs(
     collection(db, "tokens", currentOrder.token, "users")
   );
-  userSnapshot.forEach((doc) => {
-    deleteDoc(doc);
+  userSnapshot.forEach((cart) => {
+    deleteDoc(doc(db,"tokens",currentOrder.token,"users",cart.id));
   })
   await deleteDoc(doc(db,"tokens",currentOrder.token));
   resetOrder();
