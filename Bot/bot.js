@@ -6,6 +6,7 @@ import {
   updateDoc,
   collection,
   getDocs,
+  deleteDoc,
 } from "firebase/firestore";
 import { Markup, Telegraf } from "telegraf";
 import app from "../src/firebase.js";
@@ -41,7 +42,7 @@ bot.start((ctx) => {
 });
 
 bot.command("startneworder", async (ctx) => {
-  if (currentOrder.status === "active") {
+  if (currentOrder.status === "active" || currentOrder.status === "closed") {
     ctx.reply(
       "There is an ongoing order! Please send /resetorder to start a new order."
     );
@@ -147,8 +148,25 @@ bot.command("confirmorder", async (ctx) => {
 
 //sets order status to inactive, deletes current order in database
 //(future)adds cart to respective telegram handle in database
-bot.command("paid", (ctx) => {
-  resetOrder();
+bot.command("paid", async (ctx) => {
+  if (ctx.from.id !== currentOrder.owner) {
+    ctx.reply(
+      "No order active or you are not the creator of the order! Send /forcereset if necessary."
+    );
+    return false;
+  } else if (currentOrder.status === "payment") {
+    const userSnapshot = await getDocs(
+      collection(db, "tokens", currentOrder.token, "users")
+    );
+    userSnapshot.forEach((doc) => {
+      deleteDoc(doc);
+    })
+    await deleteDoc(doc(db,"tokens",currentOrder.token));
+    resetOrder();
+    ctx.reply("Payment acknowledged.")
+  } else {
+    ctx.reply("The order has not moved to payment status yet.");
+  }
 });
 
 bot.command("token", (ctx) => {
@@ -167,16 +185,28 @@ bot.command("resetorder", async (ctx) => {
   } else if (currentOrder.status === "payment") {
     ctx.reply("Payment is still pending. Please send /paid to complete the order process.")
   } else {
-    //deletecollection
+    const userSnapshot = await getDocs(
+      collection(db, "tokens", currentOrder.token, "users")
+    );
+    userSnapshot.forEach((doc) => {
+      deleteDoc(doc);
+    })
+    await deleteDoc(doc(db,"tokens",currentOrder.token));
     resetOrder();
     ctx.reply("Order cleared, start new order by sending /startneworder");
   }
 });
 
-bot.command("forcereset", (ctx) => {
-  //deletecollection
+//ignores bot order status and resets
+bot.command("forcereset", async (ctx) => {
+  const userSnapshot = await getDocs(
+    collection(db, "tokens", currentOrder.token, "users")
+  );
+  userSnapshot.forEach((doc) => {
+    deleteDoc(doc);
+  })
+  await deleteDoc(doc(db,"tokens",currentOrder.token));
   resetOrder();
-  const currentOrderRef = doc(db, "orders", currentOrder.token);
   ctx.reply("Order cleared, start new order by sending /startneworder");
 });
 
@@ -205,3 +235,4 @@ const resetOrder = () => {
     token: "",
   };
 };
+
