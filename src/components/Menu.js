@@ -12,6 +12,7 @@ export default function Menu() {
   const [foodName, setFoodName] = useState("");
   const [foodPrice, setFoodPrice] = useState(0.0);
   const [OTP, setOTP] = useState("");
+  const [isShown, setIsShown] = useState(false);
 
   const db = getFirestore(app);
 
@@ -78,6 +79,7 @@ export default function Menu() {
       console.log("Full data:", doc.data());
       setFoods(doc.data().cart);
     });
+    setIsShown(true);
     console.log({ OTP });
   };
 
@@ -97,6 +99,7 @@ export default function Menu() {
       setCartItems([]);
       setFoods([]);
     }
+    setIsShown(false);
   };
 
   return (
@@ -120,61 +123,64 @@ export default function Menu() {
         </Button>
       </InputGroup>
       
-      <Card className="text-center" bg="light">
-        <Card.Header as="h5">PayLeh! Order</Card.Header>
-        <Cart cartItems={cartItems} onCheckout={onCheckout} />
-        <div className="cards__container">
-          {foods.map((food) => {
-            return (
-              <Cards
-                food={food}
-                key={food.title}
-                onAdd={onAdd}
-                onRemove={onRemove}
-              />
-            );
-          })}
-        </div>
+      {isShown && (
+        <Card className="text-center" bg="light">
+          <Card.Header as="h5">PayLeh! Order</Card.Header>
+          <h8>You have joined: <strong>{OTP}</strong></h8>
+          <Cart cartItems={cartItems} onCheckout={onCheckout} />
+          <div className="cards__container">
+            {foods.map((food) => {
+              return (
+                <Cards
+                  food={food}
+                  key={food.title}
+                  onAdd={onAdd}
+                  onRemove={onRemove}
+                />
+              );
+            })}
+          </div>
 
-        <Form onSubmit={AddtoMenu}>
-          <Form.Label>
-            Telegram handle:
-            <InputGroup className="mb-2">
-              <InputGroup.Text id="basic-addon1">@</InputGroup.Text>
-              <FormControl
-                size="sm"
+          <Form onSubmit={AddtoMenu}>
+            <Form.Label>
+              Telegram handle:
+              <InputGroup className="mb-2">
+                <InputGroup.Text id="basic-addon1">@</InputGroup.Text>
+                <FormControl
+                  size="sm"
+                  type="text"
+                  name="title"
+                  value={user}
+                  onChange={(e) => setUser(e.target.value)}
+                />
+              </InputGroup>
+            </Form.Label>
+            <Form.Label>
+              Name of food:
+              <Form.Control
                 type="text"
                 name="title"
-                value={user}
-                onChange={(e) => setUser(e.target.value)}
+                value={foodName}
+                onChange={(e) => setFoodName(e.target.value)}
               />
-            </InputGroup>
-          </Form.Label>
-          <Form.Label>
-            Name of food:
-            <Form.Control
-              type="text"
-              name="title"
-              value={foodName}
-              onChange={(e) => setFoodName(e.target.value)}
-            />
-          </Form.Label>
-          <Form.Label>
-            Price:
-            <Form.Control
-              type="number"
-              name="price"
-              min="0.01"
-              step="0.01"
-              value={foodPrice}
-              onChange={(e) => setFoodPrice(e.target.value)}
-            />
-          </Form.Label>
-          <div> 
-            <Button type="submit" size="sm"> Select</Button>
-          </div>
-        </Form>
-      </Card>
+            </Form.Label>
+            <Form.Label>
+              Price:
+              <Form.Control
+                type="number"
+                name="price"
+                min="0.01"
+                step="0.01"
+                value={foodPrice}
+                onChange={(e) => setFoodPrice(e.target.value)}
+              />
+            </Form.Label>
+            <div> 
+              <Button type="submit" size="sm"> Select</Button>
+            </div>
+          </Form>
+        </Card>
+      )}
 
       
     </>

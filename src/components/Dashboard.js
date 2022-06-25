@@ -25,11 +25,11 @@ export default function Dashboard() {
       <p>
         <Image src="/logo.png" alt="" width="150" className="rounded mx-auto d-block"/>
       </p>
-      <Card>
+      <Card bg="light">
+        <Card.Header as="h2" className="text-center mb-4">User Profile</Card.Header>
         <Card.Body>
-          <h2 className="text-center mb-4">Profile</h2>
           {error && <Alert variant="danger">{error}</Alert>}
-          <strong>Email:</strong> {currentUser.email}
+          <strong>Email:</strong> {currentUser.email} 
           <Link to="/menu" className="btn btn-primary w-100 mt-3">
             Join Group Order
           </Link>
