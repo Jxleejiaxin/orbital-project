@@ -12,7 +12,7 @@ export default function Menu() {
   const [foodName, setFoodName] = useState("");
   const [foodPrice, setFoodPrice] = useState(0.0);
   const [OTP, setOTP] = useState("");
-  const [isShown, setIsShown] = useState(false);
+  const [menuIsShown, setMenuIsShown] = useState(false);
 
   const db = getFirestore(app);
 
@@ -79,7 +79,7 @@ export default function Menu() {
       console.log("Full data:", doc.data());
       setFoods(doc.data().cart);
     });
-    setIsShown(true);
+    setMenuIsShown(true);
     console.log({ OTP });
   };
 
@@ -99,7 +99,7 @@ export default function Menu() {
       setCartItems([]);
       setFoods([]);
     }
-    setIsShown(false);
+    setMenuIsShown(false);
   };
 
   return (
@@ -123,7 +123,7 @@ export default function Menu() {
         </Button>
       </InputGroup>
       
-      {isShown && (
+      {menuIsShown && (
         <Card className="text-center" bg="light">
           <Card.Header as="h5">PayLeh! Order</Card.Header>
           <h8>You have joined: <strong>{OTP}</strong></h8>
@@ -176,7 +176,7 @@ export default function Menu() {
               />
             </Form.Label>
             <div> 
-              <Button type="submit" size="sm"> Select</Button>
+              <Button type="submit" size="sm" className="mt-2 mb-2"> Select</Button>
             </div>
           </Form>
         </Card>
