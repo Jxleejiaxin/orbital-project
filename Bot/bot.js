@@ -27,16 +27,7 @@ let currentOrder = {
 bot.start((ctx) => {
   if (ctx.message.chat.type === "private") {
     ctx.reply(
-      `Hi! ${ctx.from.first_name} 👋 \n \n Type /startneworder in your desired group to begin!`,
-      Markup.inlineKeyboard(
-        [
-          Markup.button.url(
-            "WebApp",
-            "https://fanciful-dusk-4693ed.netlify.app/"
-          ),
-        ],
-        { columns: 1 }
-      )
+      `Hi! ${ctx.from.first_name} 👋 \n \n Type /startneworder in your desired group to begin!`
     );
   }
 });
@@ -123,6 +114,8 @@ bot.command("openorder", async (ctx) => {
   }
 });
 
+let timer = null;
+
 //sets bot order status to payment
 bot.command("confirmorder", async (ctx) => {
   if (currentOrder.status === "active" || currentOrder.status === "closed") {
@@ -131,7 +124,7 @@ bot.command("confirmorder", async (ctx) => {
       collection(db, "tokens", currentOrder.token, "users")
     );
     userSnapshot.forEach((doc) => {
-      orderString += doc.id + ": ";
+      orderString += "@"+doc.id + " : $";
       const cartItems = doc.data().cart;
       const totalPrice = cartItems.reduce(
         (sum, item) => sum + item.price * item.quantity,
@@ -139,15 +132,21 @@ bot.command("confirmorder", async (ctx) => {
       );
       orderString += totalPrice + "\n";
     });
-    currentOrder.status = "payment"
-    ctx.replyWithPoll(orderString, ['Paid', 'Did not order'], {is_anonymous: false});
+    currentOrder.status = "payment";
+    const poll = await ctx.replyWithPoll(orderString, ['Paid', 'Did not order'], {is_anonymous: false});
+    timer = setInterval(() => {
+      ctx.telegram.forwardMessage(ctx.message.chat.id, ctx.message.chat.id, poll.message_id);
+      ctx.reply(`Please send /paid if all payments to ${currentOrder.ownerName} is done`)
+      }, 
+      (1000 * 24 * 60 * 60)
+    );
   } else {
     ctx.reply("No order to confirm/payment in progress.");
   }
 });
 
 //sets order status to inactive, deletes current order in database
-//(future)adds cart to respective telegram handle in database
+//TBD: adds cart to respective telegram handle in database
 bot.command("paid", async (ctx) => {
   if (ctx.from.id !== currentOrder.owner) {
     ctx.reply(
@@ -155,6 +154,7 @@ bot.command("paid", async (ctx) => {
     );
     return false;
   } else if (currentOrder.status === "payment") {
+    clearInterval(timer);
     const userSnapshot = await getDocs(
       collection(db, "tokens", currentOrder.token, "users")
     );
@@ -174,7 +174,17 @@ bot.command("token", (ctx) => {
 });
 
 //display all commands
-bot.command("help", (ctx) => {});
+bot.command("help", (ctx) => {
+  ctx.reply(`PayLeh! bot commands: 
+  /startneworder starts a new order
+  /closeorder closes the order temporarily
+  /openorder reopens a closed order
+  /confirmorder finalizes the order and it can no longer be reopened
+  /paid indicates payment is done and a new order can be placed
+  /resetorder resets the current order. This cannot be done during payment process
+  Happy ordering!
+  `);
+});
 
 bot.command("resetorder", async (ctx) => {
   if (ctx.from.id !== currentOrder.owner) {
