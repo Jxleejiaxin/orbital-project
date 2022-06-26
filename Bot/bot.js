@@ -119,7 +119,7 @@ let timer = null;
 //sets bot order status to payment
 bot.command("confirmorder", async (ctx) => {
   if (currentOrder.status === "active" || currentOrder.status === "closed") {
-    var orderString = `Please pay ${currentOrder.ownerName} as follows: \n`;
+    var orderString = `Please pay @${currentOrder.ownerName} as follows: \n`;
     const userSnapshot = await getDocs(
       collection(db, "tokens", currentOrder.token, "users")
     );

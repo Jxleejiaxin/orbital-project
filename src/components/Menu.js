@@ -6,6 +6,7 @@ import {
   Button,
   InputGroup,
   FormControl,
+  Alert
 } from "react-bootstrap";
 import Cards from "./Cards/Cards.jsx";
 import Cart from "./Cart/Cart.jsx";
@@ -30,7 +31,7 @@ export default function Menu() {
   const [OTP, setOTP] = useState("");
   const [menuIsShown, setMenuIsShown] = useState(false);
   const { currentUser, logout } = useAuth();
-
+  const [showAlert, setShowAlert] = useState(false);
   const db = getFirestore(app);
 
   //adds food to personal cart, does not read to firestore yet
@@ -105,7 +106,9 @@ export default function Menu() {
         setUser(userSnap.data().handle);
       }
       setMenuIsShown(true);
+      setShowAlert(false);
     } else {
+      setShowAlert(true);
       unsubscribe();
     }
     console.log({ OTP });
@@ -223,6 +226,16 @@ export default function Menu() {
           </Form>
         </Card>
       )}
+
+      {showAlert && (
+        <Alert variant="danger" onClose={() => setShowAlert(false)} dismissible>
+          <Alert.Heading>Oh snap! Wrong token!</Alert.Heading>
+          <p>
+            Please ensure that you have keyed in the right token!
+          </p>
+        </Alert>
+      )}
+
     </>
   );
 }
