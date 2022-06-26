@@ -55,7 +55,7 @@ export default function Signup() {
                 <Form.Control type="password" ref={passwordConfirmRef} required placeholder="Confirm password"/>
               </Form.Group>
               <Form.Label>
-              Telegram handle:
+              Telegram Handle
               <InputGroup className="mt-2 mb-2">
                 <InputGroup.Text id="basic-addon1">@</InputGroup.Text>
                 <FormControl
