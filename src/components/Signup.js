@@ -1,5 +1,5 @@
 import React, { useRef, useState } from 'react'
-import { Form, Button, Card, Alert, Image } from 'react-bootstrap'
+import { Form, Button, Card, Alert, Image, InputGroup, FormControl} from 'react-bootstrap'
 import { useAuth } from '../contexts/AuthContext.js'
 import { Link, useNavigate } from 'react-router-dom'
 import app from "../firebase.js";
@@ -14,6 +14,7 @@ export default function Signup() {
     const [error, setError] = useState('')
     const [loading, setLoading] = useState(false)
     const navigate = useNavigate()
+    const [user, setUser] = useState("");
 
     async function handleSubmit(e) {
         e.preventDefault()
@@ -57,6 +58,19 @@ export default function Signup() {
                 <Form.Label>Password Confirmation</Form.Label>
                 <Form.Control type="password" ref={passwordConfirmRef} required placeholder="Confirm password"/>
               </Form.Group>
+              <Form.Label>
+              Telegram handle:
+              <InputGroup className="mt-2 mb-2">
+                <InputGroup.Text id="basic-addon1">@</InputGroup.Text>
+                <FormControl
+                  size="sm"
+                  type="text"
+                  name="title"
+                  value={user}
+                  onChange={(e) => setUser(e.target.value)}
+                />
+              </InputGroup>
+            </Form.Label>
               <div className="w-100 text-center mt-2">
                 <Button disabled={loading} type="submit">
                   Sign Up
