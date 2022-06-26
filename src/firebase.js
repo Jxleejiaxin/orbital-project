@@ -2,12 +2,12 @@ import firebase from "firebase/compat/app"
 import "firebase/compat/auth"
 
 const app = firebase.initializeApp({
-    apiKey: "YOUR_OWN_API_KEY",
-    authDomain: "YOUR_APP.firebaseapp.com",
-    projectId: "YOUR_APP_ID",
-    storageBucket: "YOUR_APP.appspot.com",
-    messagingSenderId: "YOUR_ID",
-    appId: "YOUR_APP_ID"
+    apiKey: "AIzaSyC2tgDG8OG9z8ylH4aM41qt9IhKJGOPXB0",
+    authDomain: "payleh-login-d6c39.firebaseapp.com",
+    projectId: "payleh-login-d6c39",
+    storageBucket: "payleh-login-d6c39.appspot.com",
+    messagingSenderId: "710816734570",
+    appId: "1:710816734570:web:f0a378d6636771875a1913"
 })
 
 export const auth = app.auth()
