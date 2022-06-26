@@ -3,7 +3,7 @@ import { Form, Button, Card, Alert, Image, InputGroup, FormControl} from 'react-
 import { useAuth } from '../contexts/AuthContext.js'
 import { Link, useNavigate } from 'react-router-dom'
 import app from "../firebase.js";
-import {getFirestore, doc} from "firebase/firestore";
+import {getFirestore, doc, setDoc} from "firebase/firestore";
 
 export default function Signup() {
     const db = getFirestore(app);
@@ -28,7 +28,10 @@ export default function Signup() {
             setLoading(true)
             await signup(emailRef.current.value, passwordRef.current.value)
             const userRef = doc(db, "user email", emailRef.current.value);
-            navigate("/", {email: emailRef.current.value})
+            await setDoc(userRef, {
+              handle: user
+            });
+            navigate("/")
         } catch {
             setError("Failed to create an account")
         }

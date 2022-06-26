@@ -1,9 +1,25 @@
-import { useState} from "react";
-import { Image, Card, Form, Button, InputGroup, FormControl} from "react-bootstrap";
+import { useState } from "react";
+import {
+  Image,
+  Card,
+  Form,
+  Button,
+  InputGroup,
+  FormControl,
+} from "react-bootstrap";
 import Cards from "./Cards/Cards.jsx";
 import Cart from "./Cart/Cart.jsx";
 import app from "../firebase.js";
-import {getFirestore, doc, setDoc, getDoc, updateDoc, onSnapshot, arrayUnion} from "firebase/firestore";
+import { useAuth } from "../contexts/AuthContext.js";
+import {
+  getFirestore,
+  doc,
+  setDoc,
+  getDoc,
+  updateDoc,
+  onSnapshot,
+  arrayUnion
+} from "firebase/firestore";
 
 export default function Menu() {
   const [cartItems, setCartItems] = useState([]);
@@ -13,8 +29,11 @@ export default function Menu() {
   const [foodPrice, setFoodPrice] = useState(0.0);
   const [OTP, setOTP] = useState("");
   const [menuIsShown, setMenuIsShown] = useState(false);
+  const { currentUser, logout } = useAuth();
 
   const db = getFirestore(app);
+
+  setUser(getDoc(doc(db, "user email", currentUser.email)).data().handle);
 
   //adds food to personal cart, does not read to firestore yet
   const onAdd = (food) => {
@@ -62,24 +81,30 @@ export default function Menu() {
       return;
     } else {
       await updateDoc(orderRef, {
-        cart: arrayUnion({title:foodName,price:foodPrice})
+        cart: arrayUnion({ title: foodName, price: foodPrice }),
       });
       console.log(foods);
     }
   };
 
   //initiates listener (unsubscribe() doesnt work in onCheckout if unsubscribe is simply set to null)
-  var unsubscribe = onSnapshot(doc(db,"tokens","1"));
-  unsubscribe(); 
+  var unsubscribe = onSnapshot(doc(db, "tokens", "1"));
+  unsubscribe();
 
-  const onClick = (event) => {
+  const onClick = async (event) => {
     event.preventDefault();
-    //listener populates food array
-    unsubscribe = onSnapshot(doc(db,"tokens",OTP), (doc) => {
-      console.log("Full data:", doc.data());
-      setFoods(doc.data().cart);
-    });
-    setMenuIsShown(true);
+    const orderRef = doc(db, "tokens", OTP);
+    const orderSnap = await getDoc(orderRef);
+    if (orderSnap.exists()) {
+      //listener populates food array
+      unsubscribe = onSnapshot(orderRef, (doc) => {
+        console.log("Full data:", doc.data());
+        setFoods(doc.data().cart);
+      });
+      setMenuIsShown(true);
+    } else {
+
+    }
     console.log({ OTP });
   };
 
@@ -93,7 +118,7 @@ export default function Menu() {
       return;
     } else {
       const userRef = doc(db, "tokens", OTP, "users", user);
-      setDoc(userRef, {cart:cartItems});
+      setDoc(userRef, { cart: cartItems });
       setOTP("");
       unsubscribe();
       setCartItems([]);
@@ -104,11 +129,15 @@ export default function Menu() {
 
   return (
     <>
-
       <p>
-        <Image src="/logo.png" alt="" width="150" className="rounded mx-auto d-block"/>
+        <Image
+          src="/logo.png"
+          alt=""
+          width="150"
+          className="rounded mx-auto d-block"
+        />
       </p>
-      
+
       <InputGroup className="mb-3">
         <Form.Control
           type="text"
@@ -118,15 +147,22 @@ export default function Menu() {
           onChange={(e) => setOTP(e.target.value)}
           placeholder="Input Token"
         />
-        <Button variant="outline-secondary" id="button-addon2" type="submit" onClick={onClick}>
-          Join 
+        <Button
+          variant="outline-secondary"
+          id="button-addon2"
+          type="submit"
+          onClick={onClick}
+        >
+          Join
         </Button>
       </InputGroup>
-      
+
       {menuIsShown && (
         <Card className="text-center" bg="light">
           <Card.Header as="h5">PayLeh! Order</Card.Header>
-          <h8>You have joined: <strong>{OTP}</strong></h8>
+          <h8>
+            You have joined: <strong>{OTP}</strong>
+          </h8>
           <Cart cartItems={cartItems} onCheckout={onCheckout} />
           <div className="cards__container">
             {foods.map((food) => {
@@ -175,14 +211,15 @@ export default function Menu() {
                 onChange={(e) => setFoodPrice(e.target.value)}
               />
             </Form.Label>
-            <div> 
-              <Button type="submit" size="sm" className="mt-2 mb-2"> Select</Button>
+            <div>
+              <Button type="submit" size="sm" className="mt-2 mb-2">
+                {" "}
+                Select
+              </Button>
             </div>
           </Form>
         </Card>
       )}
-
-      
     </>
   );
 }
