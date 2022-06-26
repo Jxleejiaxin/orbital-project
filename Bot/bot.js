@@ -63,7 +63,7 @@ bot.command("startneworder", async (ctx) => {
       [
         Markup.button.url(
           "WebApp",
-          "https://fanciful-dusk-4693ed.netlify.app/"
+          "https://payleh-bot.netlify.app/"
         ),
       ],
       { columns: 1 }
@@ -99,7 +99,7 @@ bot.command("openorder", async (ctx) => {
         [
           Markup.button.url(
             "WebApp",
-            "https://fanciful-dusk-4693ed.netlify.app/"
+            "https://payleh-bot.netlify.app/"
           ),
         ],
         { columns: 1 }
