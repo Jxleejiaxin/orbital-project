@@ -33,8 +33,6 @@ export default function Menu() {
 
   const db = getFirestore(app);
 
-  setUser(getDoc(doc(db, "user email", currentUser.email)).data().handle);
-
   //adds food to personal cart, does not read to firestore yet
   const onAdd = (food) => {
     const exist = cartItems.find((x) => x.title === food.title);
@@ -101,9 +99,14 @@ export default function Menu() {
         console.log("Full data:", doc.data());
         setFoods(doc.data().cart);
       });
+      const userRef = doc(db, "user email", currentUser.email);
+      const userSnap = await getDoc(userRef);
+      if (userSnap.exists()) {
+        setUser(userSnap.data().handle);
+      }
       setMenuIsShown(true);
     } else {
-
+      unsubscribe();
     }
     console.log({ OTP });
   };
