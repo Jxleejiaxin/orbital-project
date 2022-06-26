@@ -32,7 +32,7 @@ export default function Menu() {
   const [foodPrice, setFoodPrice] = useState(0.0);
   const [OTP, setOTP] = useState("");
   const [menuIsShown, setMenuIsShown] = useState(false);
-  const { currentUser, logout } = useAuth();
+  const { currentUser} = useAuth();
   const [showAlert, setShowAlert] = useState(false);
   const [showSummary, setShowSummary] = useState(false);
   const [showToken, setShowToken] = useState(true);
