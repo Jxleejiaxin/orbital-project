@@ -2,8 +2,11 @@ import React, { useRef, useState } from 'react'
 import { Form, Button, Card, Alert, Image } from 'react-bootstrap'
 import { useAuth } from '../contexts/AuthContext.js'
 import { Link, useNavigate } from 'react-router-dom'
+import app from "../firebase.js";
+import {getFirestore, doc} from "firebase/firestore";
 
 export default function Signup() {
+    const db = getFirestore(app);
     const emailRef = useRef()
     const passwordRef = useRef()
     const passwordConfirmRef = useRef()
@@ -23,7 +26,8 @@ export default function Signup() {
             setError("")
             setLoading(true)
             await signup(emailRef.current.value, passwordRef.current.value)
-            navigate("/")
+            const userRef = doc(db, "user email", emailRef.current.value);
+            navigate("/", {email: emailRef.current.value})
         } catch {
             setError("Failed to create an account")
         }
