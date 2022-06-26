@@ -11,7 +11,7 @@ import {
 import { Markup, Telegraf } from "telegraf";
 import app from "../src/firebase.js";
 
-const TOKEN = "YOUR_BOT_TOKEN";
+const TOKEN = "5345883223:AAHVpuSSGZuOYdYImzakATNYi4tXw_Kyd_0";
 const bot = new Telegraf(TOKEN);
 const db = getFirestore(app);
 
@@ -138,7 +138,7 @@ bot.command("confirmorder", async (ctx) => {
       ctx.telegram.forwardMessage(ctx.message.chat.id, ctx.message.chat.id, poll.message_id);
       ctx.reply(`Please send /paid if all payments to ${currentOrder.ownerName} is done`)
       }, 
-      (1000)
+      (1000 * 24 * 60 * 60)
     );
   } else {
     ctx.reply("No order to confirm/payment in progress.");
