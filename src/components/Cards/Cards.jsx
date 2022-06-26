@@ -22,7 +22,7 @@ function Cards({food,onAdd,onRemove}) {
       >{count}
       </span>
       <h4 className="card__title">
-          {title} : <span className="card__price">${price}</span>
+          {title} : <span className="card__price">${parseFloat(price).toFixed(2)}</span>
       </h4>
 
       <div className="btn_container">

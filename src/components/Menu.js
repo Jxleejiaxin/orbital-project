@@ -6,8 +6,10 @@ import {
   Button,
   InputGroup,
   FormControl,
-  Alert
+  Alert,
+  Table
 } from "react-bootstrap";
+import { Link } from "react-router-dom"
 import Cards from "./Cards/Cards.jsx";
 import Cart from "./Cart/Cart.jsx";
 import app from "../firebase.js";
@@ -32,6 +34,11 @@ export default function Menu() {
   const [menuIsShown, setMenuIsShown] = useState(false);
   const { currentUser, logout } = useAuth();
   const [showAlert, setShowAlert] = useState(false);
+  const [showSummary, setShowSummary] = useState(false);
+  const [showToken, setShowToken] = useState(true);
+  
+  const totalPrice = cartItems.reduce((sum,item)=>sum + item.price * item.quantity,0);
+
   const db = getFirestore(app);
 
   //adds food to personal cart, does not read to firestore yet
@@ -92,6 +99,7 @@ export default function Menu() {
 
   const onClick = async (event) => {
     event.preventDefault();
+    setCartItems([]);
     const orderRef = doc(db, "tokens", OTP);
     const orderSnap = await getDoc(orderRef);
     if (orderSnap.exists()) {
@@ -127,48 +135,59 @@ export default function Menu() {
       setDoc(userRef, { cart: cartItems });
       setOTP("");
       unsubscribe();
-      setCartItems([]);
+      console.log(cartItems)
       setFoods([]);
     }
     setMenuIsShown(false);
+    setShowSummary(true);
+    setShowToken(false);
   };
+
+  const handleCloseSummary = () => {
+    setShowToken(true);
+    setShowSummary(false);
+  }
 
   return (
     <>
       <p>
-        <Image
-          src="/logo.png"
-          alt=""
-          width="150"
-          className="rounded mx-auto d-block"
-        />
+        <Link to="/">
+          <Image
+            src="/logo.png"
+            alt=""
+            width="150"
+            className="rounded mx-auto d-block"
+          />
+        </Link>
       </p>
-
-      <InputGroup className="mb-3">
-        <Form.Control
-          type="text"
-          className="form-control"
-          name="otp"
-          value={OTP}
-          onChange={(e) => setOTP(e.target.value)}
-          placeholder="Input Token"
-        />
-        <Button
-          variant="outline-secondary"
-          id="button-addon2"
-          type="submit"
-          onClick={onClick}
-        >
-          Join
-        </Button>
-      </InputGroup>
+      {showToken && (
+        <InputGroup className="mb-3">
+          <Form.Control
+            type="text"
+            className="form-control"
+            name="otp"
+            value={OTP}
+            onChange={(e) => setOTP(e.target.value)}
+            placeholder="Input Token"
+          />
+          <Button
+            variant="outline-secondary"
+            id="button-addon2"
+            type="submit"
+            onClick={onClick}
+          >
+            Join
+          </Button>
+        </InputGroup>
+      )}
+      
 
       {menuIsShown && (
         <Card className="text-center" bg="light">
           <Card.Header as="h5">PayLeh! Order</Card.Header>
-          <h8>
+          <p>
             You have joined: <strong>{OTP}</strong>
-          </h8>
+          </p>
           <Cart cartItems={cartItems} onCheckout={onCheckout} />
           <div className="cards__container">
             {foods.map((food) => {
@@ -231,9 +250,40 @@ export default function Menu() {
         <Alert variant="danger" onClose={() => setShowAlert(false)} dismissible>
           <Alert.Heading>Oh snap! Wrong token!</Alert.Heading>
           <p>
-            Please ensure that you have keyed in the right token!
+            Ensure that you have keyed in the right token!
           </p>
         </Alert>
+      )}
+      
+      {showSummary && (
+        <Card className="text-center" bg="light">
+          <Card.Header as="h5">Order Summary</Card.Header>
+            <Table striped bordered hover size="sm">
+              <thead>
+                <tr>
+                  <th>Title</th>
+                  <th>Quantity</th>
+                  <th>Price</th>
+                </tr>
+              </thead>
+              <tbody>
+                {cartItems.map( (item,index) =>
+                (
+                  <tr key={index}>
+                    <td>{item.title}</td>
+                    <td>x{item.quantity}</td>
+                    <td>${parseFloat(item.price).toFixed(2)}</td>
+                  </tr>
+                )
+                )}
+              </tbody>
+            </Table>
+            
+            Total Price: <h3><strong>${totalPrice.toFixed(2)}</strong></h3>
+            <div>
+              <Button onClick={handleCloseSummary} className="mb-2 mt-2">Back</Button>
+            </div>
+        </Card>
       )}
 
     </>
