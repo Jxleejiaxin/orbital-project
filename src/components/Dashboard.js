@@ -45,7 +45,7 @@ export default function Dashboard() {
         <Card.Body>
           {error && <Alert variant="danger">{error}</Alert>}
           <strong>Email:</strong> {currentUser.email} 
-          <strong>Telegram handle: @</strong> {user}
+          <strong>Telegram handle: @</strong>{user}
           <Link to="/menu" className="btn btn-primary w-100 mt-3">
             Join Group Order
           </Link>
