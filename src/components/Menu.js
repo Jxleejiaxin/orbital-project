@@ -31,11 +31,13 @@ export default function Menu() {
   const [foodName, setFoodName] = useState("");
   const [foodPrice, setFoodPrice] = useState(0.0);
   const [OTP, setOTP] = useState("");
+  const [currentOTP, setCurrentOTP] = useState("");
   const [menuIsShown, setMenuIsShown] = useState(false);
   const { currentUser} = useAuth();
   const [showAlert, setShowAlert] = useState(false);
   const [showSummary, setShowSummary] = useState(false);
   const [showToken, setShowToken] = useState(true);
+  const [orderStatus, setOrderStatus] = useState("open");
   
   const totalPrice = cartItems.reduce((sum,item)=>sum + item.price * item.quantity,0);
 
@@ -103,11 +105,14 @@ export default function Menu() {
     const orderRef = doc(db, "tokens", OTP);
     const orderSnap = await getDoc(orderRef);
     if (orderSnap.exists()) {
+      setCurrentOTP(OTP);
       //listener populates food array
       unsubscribe = onSnapshot(orderRef, (doc) => {
         console.log("Full data:", doc.data());
         setFoods(doc.data().cart);
+        setOrderStatus(doc.data().status);
       });
+      console.log(orderStatus);
       const userRef = doc(db, "user email", currentUser.email);
       const userSnap = await getDoc(userRef);
       if (userSnap.exists()) {
@@ -186,7 +191,10 @@ export default function Menu() {
         <Card className="text-center" bg="light">
           <Card.Header as="h5">PayLeh! Order</Card.Header>
           <p>
-            You have joined: <strong>{OTP}</strong>
+            You have joined: <strong>{currentOTP}</strong>
+          </p>
+          <p>
+            Order status: <strong>{orderStatus}</strong>
           </p>
           <Cart cartItems={cartItems} onCheckout={onCheckout} />
           <div className="cart__container">
