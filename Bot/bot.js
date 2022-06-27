@@ -21,7 +21,7 @@ let currentOrder = {
   status: "inactive",
   owner: null,
   ownerName: null,
-  token: "",
+  token: "not generated yet",
 };
 
 bot.start((ctx) => {
@@ -124,13 +124,16 @@ bot.command("confirmorder", async (ctx) => {
       collection(db, "tokens", currentOrder.token, "users")
     );
     userSnapshot.forEach((doc) => {
-      orderString += "@"+doc.id + " : $";
+      orderString += "@"+doc.id + " : \n";
       const cartItems = doc.data().cart;
+      cartItems.forEach((item) => {
+        orderString += item.quantity + "x" + item.title + "\n";
+      })
       const totalPrice = cartItems.reduce(
         (sum, item) => sum + item.price * item.quantity,
         0
       );
-      orderString += totalPrice + "\n";
+      orderString += "$" + totalPrice + "\n";
     });
     currentOrder.status = "payment";
     const poll = await ctx.replyWithPoll(orderString, ['Paid', 'Did not order'], {is_anonymous: false});
@@ -242,7 +245,7 @@ const resetOrder = () => {
   currentOrder = {
     active: false,
     owner: null,
-    token: "",
+    token: "not generated yet.",
   };
 };
 
