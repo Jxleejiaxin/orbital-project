@@ -23,11 +23,16 @@ export default function Dashboard() {
     }
   }
 
-  const userRef = doc(db, "user email", currentUser.email);
-  const userSnap = getDoc(userRef);
-  if (userSnap.exists()) {
+  const teleHandle = async () => {
+    const userRef = doc(db, "user email", currentUser.email);
+    const userSnap = await getDoc(userRef);
+    if (userSnap.exists()) {
       setUser(userSnap.data().handle);
+    }
   }
+
+  teleHandle();
+  
 
 
   return (
