@@ -23,6 +23,10 @@ export default function Signup() {
             return setError("Passwords do not match")
         }
 
+        if (user === "") {
+          return setError("Telegram handle cannot be empty")
+        }
+
         try {
             setError("")
             setLoading(true)
