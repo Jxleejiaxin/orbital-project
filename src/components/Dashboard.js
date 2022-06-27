@@ -2,11 +2,15 @@ import React, { useState } from "react"
 import { Card, Button, Alert, Image } from "react-bootstrap"
 import { useAuth } from "../contexts/AuthContext.js"
 import { Link, useNavigate } from "react-router-dom"
+import { getFirestore, doc, getDoc } from "firebase/firestore"
+import app from "../firebase.js"
 
 export default function Dashboard() {
   const [error, setError] = useState("")
+  const [user, setUser] = useState("")
   const { currentUser, logout } = useAuth()
   const navigate = useNavigate()
+  const db = getFirestore(app);
 
   async function handleLogout() {
     setError("")
@@ -19,6 +23,17 @@ export default function Dashboard() {
     }
   }
 
+  const teleHandle = async () => {
+    const userRef = doc(db, "user email", currentUser.email);
+    const userSnap = await getDoc(userRef);
+    if (userSnap.exists()) {
+      setUser(userSnap.data().handle);
+    }
+  }
+
+  teleHandle();
+  
+
 
   return (
     <>
@@ -30,6 +45,7 @@ export default function Dashboard() {
         <Card.Body>
           {error && <Alert variant="danger">{error}</Alert>}
           <strong>Email:</strong> {currentUser.email} 
+          <strong>Telegram handle: @</strong> {user}
           <Link to="/menu" className="btn btn-primary w-100 mt-3">
             Join Group Order
           </Link>
