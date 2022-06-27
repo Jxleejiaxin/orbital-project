@@ -193,8 +193,9 @@ export default function Menu() {
           <p>
             You have joined: <strong>{currentOTP}</strong>
           </p>
+          
           <p>
-            Order status: <strong>{orderStatus}</strong>
+            Order status: <strong>{orderStatus === "open" ? <h4 style={{color:"green"}}>Open</h4>: <h4 style={{color:"red"}}>Close</h4>}</strong>
           </p>
           <Cart cartItems={cartItems} onCheckout={onCheckout} />
           <div className="cart__container">
