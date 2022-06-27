@@ -189,7 +189,7 @@ export default function Menu() {
             You have joined: <strong>{OTP}</strong>
           </p>
           <Cart cartItems={cartItems} onCheckout={onCheckout} />
-          <div className="cards__container">
+          <div className="cart__container">
             {foods.map((food) => {
               return (
                 <Cards
