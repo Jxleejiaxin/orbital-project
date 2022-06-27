@@ -195,7 +195,7 @@ export default function Menu() {
           </p>
           
           <p>
-            Order status: <strong>{orderStatus === "open" ? <h4 style={{color:"green"}}>Open</h4>: <h4 style={{color:"red"}}>Close</h4>}</strong>
+            Order status: <strong>{orderStatus === "open" ? <h4 style={{color:"green"}}>Open</h4>: <h4 style={{color:"red"}}>Closed</h4>}</strong>
           </p>
           <Cart cartItems={cartItems} onCheckout={onCheckout} />
           <div className="cart__container">
