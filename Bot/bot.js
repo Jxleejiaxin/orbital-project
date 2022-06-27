@@ -11,7 +11,7 @@ import {
 import { Markup, Telegraf } from "telegraf";
 import app from "../src/firebase.js";
 
-const TOKEN = "5345883223:AAHVpuSSGZuOYdYImzakATNYi4tXw_Kyd_0";
+const TOKEN = "YOUR_BOT_TOKEN";
 const bot = new Telegraf(TOKEN);
 const db = getFirestore(app);
 

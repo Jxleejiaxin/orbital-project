@@ -42,10 +42,11 @@ export default function Dashboard() {
       </p>
       <Card bg="light">
         <Card.Header as="h2" className="text-center mb-4">User Profile</Card.Header>
+        <Card.Subtitle className="mb-2 text-center">Welcome @{user}!</Card.Subtitle>
         <Card.Body>
           {error && <Alert variant="danger">{error}</Alert>}
           <strong>Email:</strong> {currentUser.email} 
-          <strong>Telegram handle: @</strong>{user}
+          <p><strong>Telegram handle: @</strong>{user} </p>
           <Link to="/menu" className="btn btn-primary w-100 mt-3">
             Join Group Order
           </Link>
