@@ -81,7 +81,7 @@ export default function Menu() {
       return;
     }
     event.preventDefault();
-    const orderRef = doc(db, "tokens", OTP);
+    const orderRef = doc(db, "tokens", currentOTP);
     const orderSnap = await getDoc(orderRef);
     const exist = foods.find((x) => x.title === foodName);
     //order has not been created or is closed or food is already in menu
@@ -131,12 +131,12 @@ export default function Menu() {
   //if previous order exists, will overwrite that order
   //unsubscribes listener
   const onCheckout = async () => {
-    const orderRef = doc(db, "tokens", OTP);
+    const orderRef = doc(db, "tokens", currentOTP);
     const orderSnap = await getDoc(orderRef);
     if (orderSnap.data().status === "closed") {
       return;
     } else {
-      const userRef = doc(db, "tokens", OTP, "users", user);
+      const userRef = doc(db, "tokens", currentOTP, "users", user);
       setDoc(userRef, { cart: cartItems });
       setOTP("");
       unsubscribe();
