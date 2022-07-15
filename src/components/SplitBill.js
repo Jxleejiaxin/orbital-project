@@ -1,20 +1,30 @@
 import React from 'react'
-import { Card } from "react-bootstrap";
-import { Link } from 'react-router-dom';
+import { Card, Button } from "react-bootstrap";
+import { useNavigate } from 'react-router-dom';
 
 export default function SplitBill() {
+    const navigate = useNavigate();
+
     return (
-        <Card className="text-center" bg="light">
-            <Card.Header as="h5">Split The Bill</Card.Header>
-            <Card.Body>
-                <Link to="/split/equal" className='btn btn-primary w-100 mt-3'>
-                    Split Equally
-                </Link>
-                <Link to="/split/manual" className='btn btn-primary w-100 mt-3'>
-                    Split Manually
-                </Link>
-            </Card.Body>
-        </Card>
+        <>
+            <Card className="text-center" bg="light">
+                <Card.Header as="h5">Split The Bill</Card.Header>
+                <Card.Body>
+                    <div className="text-center">
+                        <Button onClick={(e) => navigate("/split/equal")} style={{width: 300}}>Split Equally</Button>
+                    </div>
+                    
+                    <div className="text-center mt-2">
+                        <Button onClick={(e) => navigate("/split/manual")} style={{width: 300}}>Split Manually</Button>
+                    </div>
+                </Card.Body>
+            </Card>
+            <div className="w-100 text-center mt-2">
+                <Button variant="secondary" onClick={(e) => navigate("/")}>
+                    Home
+                </Button>
+            </div>
+        </>
     )
 }
 
