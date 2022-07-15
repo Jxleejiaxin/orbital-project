@@ -50,6 +50,9 @@ export default function Dashboard() {
           <Link to="/menu" className="btn btn-primary w-100 mt-3">
             Join Group Order
           </Link>
+          <Link to="/split" className="btn btn-primary w-100 mt-3">
+            Split The Bill
+          </Link>
         </Card.Body>
       </Card>
       <div className="w-100 text-center mt-2">

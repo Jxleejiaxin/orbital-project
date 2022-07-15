@@ -7,6 +7,9 @@ import Dashboard from "./Dashboard.js"
 import Login from "./Login.js"
 import PrivateRoute from "./PrivateRoute.js"
 import Menu from "./Menu.js"
+import SplitBill from "./SplitBill.js"
+import SplitEqual from "./SplitEqual.js"
+import SplitManual from "./SplitManual.js"
 
 function App() {
   return (
@@ -23,6 +26,9 @@ function App() {
                   <Route path="/signup" element={<Signup/>}/>
                   <Route path="/login" element={<Login/>}/>
                   <Route path="/menu" element={<Menu/>}/>
+                  <Route path="/split" element={<SplitBill/>}/>
+                  <Route path="/split/equal" element={<SplitEqual/>}/>
+                  <Route path="/split/manual" element={<SplitManual/>}/>
                 </Routes>
               </AuthProvider>
             </Router>
