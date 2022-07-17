@@ -1,26 +1,26 @@
 import React, { useRef, useState } from 'react'
 import { Form, Button, Card, Alert, Image } from 'react-bootstrap'
 import { useAuth } from '../contexts/AuthContext.js'
-import { Link, useNavigate } from 'react-router-dom'
+import { Link } from 'react-router-dom'
 
-export default function Login() {
+export default function ForgotPassword() {
     const emailRef = useRef()
-    const passwordRef = useRef()
-    const { login } = useAuth()
+    const { resetPassword } = useAuth()
     const [error, setError] = useState('')
+    const [message, setMessage] = useState('')
     const [loading, setLoading] = useState(false)
-    const navigate = useNavigate()
 
     async function handleSubmit(e) {
         e.preventDefault()
 
         try {
+            setMessage('')
             setError("")
             setLoading(true)
-            await login(emailRef.current.value, passwordRef.current.value)
-            navigate("/")
+            await resetPassword(emailRef.current.value)
+            setMessage('Check your inbox for further instructions')
         } catch {
-            setError("Failed to sign in")
+            setError("Failed to reset password")
         }
       
           setLoading(false)
@@ -32,26 +32,23 @@ export default function Login() {
             <Image src="/logo.png" alt="" width="150" className="rounded mx-auto d-block"/>
           </p>
           <Card bg="light">
-            <Card.Header as="h2" className="text-center mb-4">Log In</Card.Header>
+            <Card.Header as="h2" className="text-center mb-4">Password Reset</Card.Header>
             <Card.Body>
               {error && <Alert variant="danger">{error}</Alert>}
+              {message && <Alert variant="success">{message}</Alert>}
               <Form onSubmit={handleSubmit}>
                 <Form.Group id="email">
                   <Form.Label>Email</Form.Label>
                   <Form.Control type="email" ref={emailRef} required placeholder="Enter your email"/>
                 </Form.Group>
-                <Form.Group id="password">
-                  <Form.Label>Password</Form.Label>
-                  <Form.Control type="password" ref={passwordRef} required placeholder="Enter your password"/>
-                </Form.Group>
-                <div className="w-100 text-center mt-2">
-                  <Button disabled={loading} type="submit">
-                    Log In
+                <div className="w-100 text-center mt-3">
+                  <Button disabled={loading} type="submit" style={{width:200}}>
+                    Reset Password
                   </Button>
                 </div>
               </Form>
               <div className='w-100 text-center mt-3'>
-                <Link to='/forgot-password'>Forgot Password?</Link>
+                <Link to='/login'>Login</Link>
               </div>
             </Card.Body>
           </Card>

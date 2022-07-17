@@ -32,6 +32,7 @@ export default function SplitManual() {
                     </Form.Label>
                 </Form>
                 <Button style={{width:150}} className="mt-3">Add</Button>
+                <Button variant='outline-success' style={{width:150}} className="mt-3">Confirm</Button>
             </Card.Body>
         </Card>
         <div className="w-100 text-center mt-2">
