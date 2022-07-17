@@ -11,6 +11,7 @@ import SplitBill from "./SplitBill.js"
 import SplitEqual from "./SplitEqual.js"
 import SplitManual from "./SplitManual.js"
 import ForgotPassword from "./ForgotPassword.js"
+import History from "./History.js"
 
 function App() {
   return (
@@ -31,6 +32,7 @@ function App() {
                   <Route path="/split" element={<SplitBill/>}/>
                   <Route path="/split/equal" element={<SplitEqual/>}/>
                   <Route path="/split/manual" element={<SplitManual/>}/>
+                  <Route path="/history" element={<History/>}/>
                 </Routes>
               </AuthProvider>
             </Router>

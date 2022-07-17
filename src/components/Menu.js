@@ -177,7 +177,7 @@ export default function Menu() {
             placeholder="Input Token"
           />
           <Button
-            variant="outline-secondary"
+            variant="outline-dark"
             id="button-addon2"
             type="submit"
             onClick={onClick}
