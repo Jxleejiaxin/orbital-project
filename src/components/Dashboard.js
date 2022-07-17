@@ -1,9 +1,11 @@
 import React, { useState } from "react"
-import { Card, Button, Alert, Image } from "react-bootstrap"
+import { Card, Button, Alert, Container} from "react-bootstrap"
 import { useAuth } from "../contexts/AuthContext.js"
 import { useNavigate } from "react-router-dom"
 import { getFirestore, doc, getDoc } from "firebase/firestore"
 import app from "../firebase.js"
+import classes from './Dashboard.module.css'
+import bg from './Image/bg-pattern-card.jpg'
 
 export default function Dashboard() {
   const [error, setError] = useState("")
@@ -36,27 +38,32 @@ export default function Dashboard() {
 
 
   return (
-    <>
-      <p>
-        <Image src="/logo.png" alt="" width="150" className="rounded mx-auto d-block"/>
-      </p>
-      <Card bg="light">
-        <Card.Header as="h2" className="text-center mb-4">User Profile</Card.Header>
-        <Card.Subtitle className="mb-2 text-center">Welcome @{user}!</Card.Subtitle>
-        <Card.Body>
-          {error && <Alert variant="danger">{error}</Alert>}
-          <strong>Email:</strong> {currentUser.email} 
-          <p><strong>Telegram handle: @</strong>{user} </p>
-          
-          <div className="text-center">
-            <Button onClick={(e) => navigate("/menu")} style={{width: 300}}>Join Group Order</Button>
-          </div>
-          <div className="text-center mt-2">
-            <Button onClick={(e) => navigate("/split")} style={{width: 300}}>Split The Bill</Button>
-          </div>
-        </Card.Body>
-      </Card>
-      <div className="w-100 text-center mt-2">
+    <div>
+      <Container className="py-4" >
+          <Card className={classes.ProfileCard + " mx-auto"} >
+              {error && <Alert variant="danger">{error}</Alert>}
+              <Card.Img className={classes.ProfileCardBackgroundImage} alt="Background Image" variant="top" src={bg} />
+              <Card.Img className={classes.ProfileCardImage} alt="User Image" src="/logo.png"/>
+              <Card.Body className={"text-center " + classes.ProfileCardBody}>
+                  <Card.Text className={classes.TextBold + " mb-0"}>
+                      @{user}
+                  </Card.Text>
+                  <Card.Text className={classes.TextMuted}>
+                      {currentUser.email} 
+                  </Card.Text>
+              </Card.Body>
+              <Card.Footer className={classes.CardFooter}>
+                <div className="text-center">
+                  <Button variant="outline-dark" onClick={(e) => navigate("/menu")} style={{width: 280, fontFamily:"Trebuchet MS"}}>Join Group Order</Button>
+                </div>
+                <div className="text-center mt-2">
+                  <Button variant="outline-dark" onClick={(e) => navigate("/split")} style={{width: 280, fontFamily:"Trebuchet MS"}}>Split The Bill</Button>
+                </div>
+              </Card.Footer>
+          </Card>
+      </Container>
+
+      <div className="w-100 text-center">
         <Button variant="dark" onClick={(e) => navigate("/history")}>
           History
         </Button>
@@ -65,6 +72,6 @@ export default function Dashboard() {
         </Button>
         
       </div>
-    </>
+    </div>
   )
 }
