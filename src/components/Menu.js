@@ -27,6 +27,7 @@ import {
 export default function Menu() {
   const [cartItems, setCartItems] = useState([]);
   const [foods, setFoods] = useState([]);
+  const [originalUser, setOriginalUser] = useState("");
   const [user, setUser] = useState("");
   const [foodName, setFoodName] = useState("");
   const [foodPrice, setFoodPrice] = useState(0.0);
@@ -42,6 +43,12 @@ export default function Menu() {
   const totalPrice = cartItems.reduce((sum,item)=>sum + item.price * item.quantity,0);
 
   const db = getFirestore(app);
+  
+  const userRef = doc(db, "user email", currentUser.email);
+  const userSnap = getDoc(userRef);
+  if (userSnap.exists()) {
+    setOriginalUser(userSnap.data().handle);
+  }
 
   //adds food to personal cart, does not read to firestore yet
   const onAdd = (food) => {
@@ -114,11 +121,7 @@ export default function Menu() {
         setOrderStatus(doc.data().status);
       });
       console.log(orderStatus);
-      const userRef = doc(db, "user email", currentUser.email);
-      const userSnap = await getDoc(userRef);
-      if (userSnap.exists()) {
-        setUser(userSnap.data().handle);
-      }
+      setUser(originalUser);
       setMenuIsShown(true);
       setShowAlert(false);
     } else {
@@ -138,10 +141,12 @@ export default function Menu() {
       return;
     } else {
       const userRef = doc(db, "tokens", currentOTP, "users", user);
-      setDoc(userRef, { cart: cartItems });
+      const isOriginalUser = (user === originalUser);
+      console.log(isOriginalUser);
+      setDoc(userRef, { save: isOriginalUser, email: currentUser.email, cart: cartItems });
       setOTP("");
       unsubscribe();
-      console.log(cartItems)
+      console.log(cartItems);
       setFoods([]);
     }
     setMenuIsShown(false);
