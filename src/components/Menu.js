@@ -45,10 +45,9 @@ export default function Menu() {
   const db = getFirestore(app);
   
   const userRef = doc(db, "user email", currentUser.email);
-  const userSnap = getDoc(userRef);
-  if (userSnap.exists()) {
-    setOriginalUser(userSnap.data().handle);
-  }
+  const userSnap = getDoc(userRef).then(snap => {
+    setOriginalUser(snap.data().handle);
+  });
 
   //adds food to personal cart, does not read to firestore yet
   const onAdd = (food) => {
