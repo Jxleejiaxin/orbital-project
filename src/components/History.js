@@ -59,7 +59,7 @@ export default function History() {
       <div className='text-center'>
         <Card>
           <Card.Header as ="h1">History</Card.Header>
-          {timeArray.length === 0 ? <h1>No History</h1> : <h1></h1>} 
+          {timeArray.length === 0 ? <h3 className='text-muted mt-4' style={{fontFamily:"Trebuchet MS"}}>No History Found</h3> : <h1></h1>} 
 
           {showAllHistory && (
             <ListGroup as="ol" numbered className='mb-4 mt-4'>
