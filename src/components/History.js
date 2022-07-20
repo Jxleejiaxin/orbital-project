@@ -24,7 +24,7 @@ export default function History() {
     data.forEach(item => {
        list.push({key: item.id, cart:item.data().cart, owner:item.data().owner});
     })
-    setTimeArray(list);
+    setTimeArray(list.reverse());
     setLoading(false);
     console.log(timeArray);
   }

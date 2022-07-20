@@ -1,5 +1,5 @@
 import React, { useRef, useState } from 'react'
-import { Form, Button, Card, Alert, Image } from 'react-bootstrap'
+import { Form, Button, Card, Alert, Image, Modal } from 'react-bootstrap'
 import { useAuth } from '../contexts/AuthContext.js'
 import { Link, useNavigate } from 'react-router-dom'
 
@@ -9,7 +9,11 @@ export default function Login() {
     const { login } = useAuth()
     const [error, setError] = useState('')
     const [loading, setLoading] = useState(false)
+    const [showPopup, setShowPopup] = useState(false)
     const navigate = useNavigate()
+
+    const handleClose = () => setShowPopup(false);
+    const handleShow = () => setShowPopup(true);
 
     async function handleSubmit(e) {
         e.preventDefault()
@@ -25,6 +29,22 @@ export default function Login() {
       
           setLoading(false)
     }
+
+    async function guestLogin(e) {
+      e.preventDefault()
+
+      try {
+          setError("")
+          setLoading(true)
+          await login("guest@gmail.com", "password")
+          navigate("/")
+      } catch {
+          setError("Failed to sign in")
+      }
+    
+        setLoading(false)
+  }
+
 
     return (
         <>
@@ -58,6 +78,24 @@ export default function Login() {
           <div className="w-100 text-center mt-2">
             Need an account? <Link to="/signup">Sign Up</Link>
           </div>
+          <div className="w-100 text-center">
+            Feeling lazy? <Link to="#" onClick = {handleShow}>Guest Account</Link>
+          </div>
+
+          <Modal show={showPopup} onHide={handleClose}>
+            <Modal.Header closeButton>
+              <Modal.Title>Guest Account</Modal.Title>
+            </Modal.Header>
+            <Modal.Body>All transactions made using guest account will not be saved!</Modal.Body>
+            <Modal.Footer>
+              <Button variant="secondary" onClick={handleClose}>
+                Close
+              </Button>
+              <Button variant="success" onClick={guestLogin}>
+                Proceed
+              </Button>
+            </Modal.Footer>
+          </Modal>
         </>
     )
 }
