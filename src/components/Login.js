@@ -44,13 +44,13 @@ export default function Login() {
                   <Form.Label>Password</Form.Label>
                   <Form.Control type="password" ref={passwordRef} required placeholder="Enter your password"/>
                 </Form.Group>
-                <div className="w-100 text-center mt-2">
+                <div className="w-100 text-center mt-3">
                   <Button disabled={loading} type="submit">
                     Log In
                   </Button>
                 </div>
               </Form>
-              <div className='w-100 text-center mt-3'>
+              <div className='w-100 text-center mt-2'>
                 <Link to='/forgot-password'>Forgot Password?</Link>
               </div>
             </Card.Body>

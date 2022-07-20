@@ -60,16 +60,13 @@ export default function Dashboard() {
                     <Button variant="outline-dark" onClick={(e) => navigate("/menu")} style={{width: 280, fontFamily:"Trebuchet MS"}}>Join Group Order</Button>
                   </div>
                   <div className="text-center mt-2">
-                    <Button variant="outline-dark" onClick={(e) => navigate("/split")} style={{width: 280, fontFamily:"Trebuchet MS"}}>Split The Bill</Button>
+                    <Button variant="dark" onClick={(e) => navigate("/history")} style={{width: 280, fontFamily:"Trebuchet MS"}}>History</Button>
                   </div>
                 </Card.Footer>
             </Card>
           </Container>
 
           <div className="w-100 text-center">
-            <Button variant="dark" onClick={(e) => navigate("/history")}>
-              History
-            </Button>
             <Button variant="light" onClick={handleLogout}>
               Log Out
             </Button>
