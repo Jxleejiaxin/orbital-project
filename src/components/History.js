@@ -11,6 +11,7 @@ export default function History() {
   const db = getFirestore(app);
   const navigate = useNavigate();
   const {currentUser} = useAuth();
+  const [orderOwner, setOrderOwner] = useState("");
   const [timeArray, setTimeArray] = useState([]);
   const [cartArray, setCartArray] = useState([]);
   const [showTable, setShowTable] = useState(false);
@@ -21,7 +22,7 @@ export default function History() {
     const list = [];
     const data = await getDocs(collection(db, "user email", currentUser.email, "history"));
     data.forEach(item => {
-       list.push({key: item.id, cart:item.data().cart});
+       list.push({key: item.id, cart:item.data().cart, owner:item.data().owner});
     })
     setTimeArray(list);
     setLoading(false);
@@ -34,13 +35,11 @@ export default function History() {
 
   const onClick = (event) => {
     const id = event.target.id;
-    console.log(id)
-    console.log(timeArray.filter((item) => {
-      return (item.key === id)
-    })[0].cart)
-    setCartArray(timeArray.filter((item) => {
-      return (item.key === id)
-    })[0].cart)
+    const order = timeArray.find(item => item.key === id);
+    setCartArray(order.cart)
+    setOrderOwner(order.owner)
+    console.log(order);
+    console.log(orderOwner);
     setShowAllHistory(false);
     setShowTable(true);
   }
@@ -66,7 +65,7 @@ export default function History() {
               {timeArray.map(item => {
                 return(
                   
-                    <ListGroup.Item as="li" id={item.key} action onClick={onClick}>{item.key}</ListGroup.Item>
+                    <ListGroup.Item as="li" key={item.key} id={item.key} action onClick={onClick}>{item.key}</ListGroup.Item>
                   
                 )
               })}
@@ -75,7 +74,7 @@ export default function History() {
           
           {showTable && (
             <div>
-
+              <h3>Order Creator: {orderOwner}</h3>
               <Table striped bordered hover size="sm">
                 <thead>
                   <tr>

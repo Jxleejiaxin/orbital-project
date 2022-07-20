@@ -1,4 +1,4 @@
-import React, { useState } from "react"
+import React, { useState, useEffect } from "react"
 import { Card, Button, Alert, Container} from "react-bootstrap"
 import { useAuth } from "../contexts/AuthContext.js"
 import { useNavigate } from "react-router-dom"
@@ -34,13 +34,14 @@ export default function Dashboard() {
     }
   }
 
-  teleHandle();
-  
+  useEffect(() => {
+    teleHandle();
+  }, []);
   
 
   return (
     <div>
-      {user ==="" ? <div style={{ position: "fixed", top: "50%", left: "50%", transform: "translate(-50%, -50%)" }}><DotLoader/> </div>: 
+      {false ? <div style={{ position: "fixed", top: "50%", left: "50%", transform: "translate(-50%, -50%)" }}><DotLoader/> </div>: 
         <div>
           <Container className="py-4" >
             <Card className={classes.ProfileCard + " mx-auto"} >
