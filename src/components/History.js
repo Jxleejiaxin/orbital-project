@@ -74,7 +74,7 @@ export default function History() {
           
           {showTable && (
             <div>
-              <h3>Order Creator: {orderOwner}</h3>
+              <h4 className='text-muted mt-2' style={{fontFamily:"Trebuchet MS"}}>Order Creator: {orderOwner}</h4>
               <Table striped bordered hover size="sm">
                 <thead>
                   <tr>

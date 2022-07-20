@@ -44,11 +44,7 @@ export default function Dashboard() {
 
   return (
     <div>
-<<<<<<< HEAD
-      {false ? <div style={{ position: "fixed", top: "50%", left: "50%", transform: "translate(-50%, -50%)" }}><DotLoader/> </div>: 
-=======
       {loading ? <div style={{ position: "fixed", top: "50%", left: "50%", transform: "translate(-50%, -50%)" }}><DotLoader/> </div>: 
->>>>>>> e2009e2ef667769854a68e3a0dd9004f6681ad8d
         <div>
           <Container className="py-4" >
             <Card className={classes.ProfileCard + " mx-auto"} >
