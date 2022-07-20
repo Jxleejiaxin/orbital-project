@@ -40,16 +40,16 @@ export default function Menu() {
   const [showToken, setShowToken] = useState(true);
   const [orderStatus, setOrderStatus] = useState("open");
   const navigate = useNavigate();
-
+  
   const totalPrice = cartItems.reduce((sum,item)=>sum + item.price * item.quantity,0);
- 
+
   const db = getFirestore(app);
   
   const userRef = doc(db, "user email", currentUser.email);
   const userSnap = getDoc(userRef).then(snap => {
     setOriginalUser(snap.data().handle);
   });
-  
+
   //adds food to personal cart, does not read to firestore yet
   const onAdd = (food) => {
     const exist = cartItems.find((x) => x.title === food.title);
