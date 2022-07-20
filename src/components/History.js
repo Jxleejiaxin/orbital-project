@@ -23,7 +23,7 @@ export default function History() {
     data.forEach(item => {
        list.push({key: item.id, cart:item.data().cart});
     })
-    setTimeArray(list);
+    setTimeArray(list.reverse());
     setLoading(false);
     console.log(timeArray);
   }
@@ -66,7 +66,7 @@ export default function History() {
               {timeArray.map(item => {
                 return(
                   
-                    <ListGroup.Item as="li" id={item.key} action onClick={onClick}>{item.key}</ListGroup.Item>
+                    <ListGroup.Item as="li" key={item.key} id={item.key} action onClick={onClick}>{item.key}</ListGroup.Item>
                   
                 )
               })}

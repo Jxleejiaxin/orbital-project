@@ -9,7 +9,7 @@ import {
   Alert,
   Table
 } from "react-bootstrap";
-import { Link } from "react-router-dom"
+import { Link, useNavigate } from "react-router-dom"
 import Cards from "./Cards/Cards.jsx";
 import Cart from "./Cart/Cart.jsx";
 import app from "../firebase.js";
@@ -39,16 +39,17 @@ export default function Menu() {
   const [showSummary, setShowSummary] = useState(false);
   const [showToken, setShowToken] = useState(true);
   const [orderStatus, setOrderStatus] = useState("open");
-  
-  const totalPrice = cartItems.reduce((sum,item)=>sum + item.price * item.quantity,0);
+  const navigate = useNavigate();
 
+  const totalPrice = cartItems.reduce((sum,item)=>sum + item.price * item.quantity,0);
+ 
   const db = getFirestore(app);
   
   const userRef = doc(db, "user email", currentUser.email);
   const userSnap = getDoc(userRef).then(snap => {
     setOriginalUser(snap.data().handle);
   });
-
+  
   //adds food to personal cart, does not read to firestore yet
   const onAdd = (food) => {
     const exist = cartItems.find((x) => x.title === food.title);
@@ -299,7 +300,9 @@ export default function Menu() {
             </div>
         </Card>
       )}
-      
+      <div className="text-center">
+        <Button variant="secondary" onClick={() => navigate("/")} className="mb-2 mt-2">Home</Button>
+      </div>
     </>
   );
 }
