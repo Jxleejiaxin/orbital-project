@@ -26,9 +26,8 @@ export default function Dashboard() {
       setError("Failed to log out")
     }
   }
-  console.log(currentUser.email)
+
   const teleHandle = async () => {
-    console.log("handle");
     const userRef = doc(db, "user email", currentUser.email);
     const userSnap = await getDoc(userRef);
     if (userSnap.exists()) {

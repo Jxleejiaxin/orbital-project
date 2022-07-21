@@ -26,7 +26,7 @@ export default function History() {
     })
     setTimeArray(list.reverse());
     setLoading(false);
-    console.log(timeArray);
+ 
   }
 
   useEffect(() => {
@@ -36,10 +36,8 @@ export default function History() {
   const onClick = (event) => {
     const id = event.target.id;
     const order = timeArray.find(item => item.key === id);
-    setCartArray(order.cart)
-    setOrderOwner(order.owner)
-    console.log(order);
-    console.log(orderOwner);
+    setCartArray(order.cart);
+    setOrderOwner(order.owner);
     setShowAllHistory(false);
     setShowTable(true);
   }
