@@ -171,8 +171,9 @@ export default function Menu() {
 
   return (
     <>
-      <ToastContainer position="top-end">
-        <Toast bg="danger" onClose={() => setShowToast(false)} show={showToast} delay={5000} autohide>
+      
+      <ToastContainer position="top-end" style={{zIndex:'1'}}>
+        <Toast bg="danger" onClose={() => setShowToast(false)} show={showToast} delay={5000}  autohide>
           <Toast.Header>
             <strong className="me-auto">PayLeh!</strong>
           </Toast.Header>
