@@ -7,7 +7,9 @@ import {
   InputGroup,
   FormControl,
   Alert,
-  Table
+  Table,
+  Toast,
+  ToastContainer
 } from "react-bootstrap";
 import { Link, useNavigate } from "react-router-dom"
 import Cards from "./Cards/Cards.jsx";
@@ -39,6 +41,7 @@ export default function Menu() {
   const [showSummary, setShowSummary] = useState(false);
   const [showToken, setShowToken] = useState(true);
   const [orderStatus, setOrderStatus] = useState("open");
+  const [showToast, setShowToast] = useState(false);
   const navigate = useNavigate();
 
   const totalPrice = cartItems.reduce((sum,item)=>sum + item.price * item.quantity,0);
@@ -119,11 +122,18 @@ export default function Menu() {
         console.log("Full data:", doc.data());
         setFoods(doc.data().cart);
         setOrderStatus(doc.data().status);
+        
+        if (doc.data().status === "closed") {
+          setShowToast(true);
+          console.log("toast is" + showToast)
+        }
       });
+      
       console.log(orderStatus);
       setUser(originalUser);
       setMenuIsShown(true);
       setShowAlert(false);
+      setShowToken(false);
     } else {
       setShowAlert(true);
       unsubscribe();
@@ -161,35 +171,46 @@ export default function Menu() {
 
   return (
     <>
-      <p>
-        <Link to="/">
-          <Image
-            src="/logo.png"
-            alt=""
-            width="150"
-            className="rounded mx-auto d-block"
-          />
-        </Link>
-      </p>
+      <ToastContainer position="top-end">
+        <Toast bg="danger" onClose={() => setShowToast(false)} show={showToast} delay={5000} autohide>
+          <Toast.Header>
+            <strong className="me-auto">PayLeh!</strong>
+          </Toast.Header>
+          <Toast.Body className='text-white'>Order has been closed!</Toast.Body>
+        </Toast>
+      </ToastContainer> 
+      
       {showToken && (
-        <InputGroup className="mb-3">
-          <Form.Control
-            type="text"
-            className="form-control"
-            name="otp"
-            value={OTP}
-            onChange={(e) => setOTP(e.target.value)}
-            placeholder="Input Token"
-          />
-          <Button
-            variant="outline-dark"
-            id="button-addon2"
-            type="submit"
-            onClick={onClick}
-          >
-            Join
-          </Button>
-        </InputGroup>
+        <div>
+          <p>
+            <Link to="/">
+              <Image
+                src="/logo.png"
+                alt=""
+                width="150"
+                className="rounded mx-auto d-block"
+              />
+            </Link>
+          </p>
+          <InputGroup className="mb-3">
+            <Form.Control
+              type="text"
+              className="form-control"
+              name="otp"
+              value={OTP}
+              onChange={(e) => setOTP(e.target.value)}
+              placeholder="Input Token"
+            />
+            <Button
+              variant="outline-dark"
+              id="button-addon2"
+              type="submit"
+              onClick={onClick}
+            >
+              Join
+            </Button>
+          </InputGroup>
+        </div>
       )}
       
 
