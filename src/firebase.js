@@ -11,8 +11,4 @@ const app = firebase.initializeApp({
 })
 
 export const auth = app.auth()
-<<<<<<< HEAD
 export default app 
-=======
-export default app
->>>>>>> c48e610fb5d360c2decc4d82c73ac1e55dc1f9c7
