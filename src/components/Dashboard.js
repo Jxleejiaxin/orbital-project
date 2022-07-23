@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react"
-import { Card, Button, Alert, Container} from "react-bootstrap"
+import { Card, Button, Alert, Container, Tooltip, OverlayTrigger} from "react-bootstrap"
 import { useAuth } from "../contexts/AuthContext.js"
 import { useNavigate } from "react-router-dom"
 import { getFirestore, doc, getDoc } from "firebase/firestore"
@@ -70,7 +70,17 @@ export default function Dashboard() {
                     <Button variant="dark" onClick={(e) => navigate("/history")} style={{width: 280, fontFamily:"Trebuchet MS"}}>History</Button>
                   </div> : 
                   <div className="text-center mt-2">
-                    <Button variant="dark" onClick={(e) => navigate("/history")} style={{width: 280, fontFamily:"Trebuchet MS"}} disabled>History</Button>
+                    <OverlayTrigger
+                      placement="right"
+                      delay={{show: 250, hide: 400}}
+                      overlay={<Tooltip id="tooltip-disabled">Guest accounts do not have access to history!</Tooltip>}
+                    >
+                      <span>
+                        <Button variant="dark" onClick={(e) => navigate("/history")} style={{width: 280, fontFamily:"Trebuchet MS", pointerEvents:'none'}} disabled>
+                          History
+                        </Button>
+                      </span>
+                    </OverlayTrigger>
                   </div>
                   }
                 </Card.Footer>
