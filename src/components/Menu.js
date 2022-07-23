@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useRef } from "react";
 import {
   Image,
   Card,
@@ -9,7 +9,10 @@ import {
   Alert,
   Table,
   Toast,
-  ToastContainer
+  ToastContainer,
+  Modal,
+  Overlay,
+  Tooltip
 } from "react-bootstrap";
 import { Link, useNavigate } from "react-router-dom"
 import Cards from "./Cards/Cards.jsx";
@@ -42,8 +45,12 @@ export default function Menu() {
   const [showToken, setShowToken] = useState(true);
   const [orderStatus, setOrderStatus] = useState("open");
   const [showToast, setShowToast] = useState(false);
+  const [showPopup, setShowPopup] = useState(false);
+  const [showHandleError, setShowHandleError] = useState(false);
+
   const navigate = useNavigate();
-  
+  const target = useRef(null);
+
   const totalPrice = cartItems.reduce((sum,item)=>sum + item.price * item.quantity,0);
 
   const db = getFirestore(app);
@@ -162,6 +169,7 @@ export default function Menu() {
     setMenuIsShown(false);
     setShowSummary(true);
     setShowToken(false);
+    setShowPopup(false);
   };
 
   const handleCloseSummary = () => {
@@ -169,9 +177,22 @@ export default function Menu() {
     setShowSummary(false);
   }
 
+  const handleClose = () => setShowPopup(false);
+  const handleShow = () => {
+    if (user === "") {
+      setShowHandleError(true);
+    } else {
+      setShowHandleError(false);
+      setShowPopup(true);
+    }
+    
+  }
+    
+  
+
   return (
     <>
-      
+      {/*message shown when order has been closed*/}
       <ToastContainer position="top-end" style={{zIndex:'1'}}>
         <Toast bg="danger" onClose={() => setShowToast(false)} show={showToast} delay={5000}  autohide>
           <Toast.Header>
@@ -180,6 +201,16 @@ export default function Menu() {
           <Toast.Body className='text-white'>Order has been closed!</Toast.Body>
         </Toast>
       </ToastContainer> 
+
+      {/*error message tooltip shown when order confirmed without a telegram handle*/}
+      <Overlay target={target.current} show={showHandleError} placement="right">
+        {(props) => (
+          <Tooltip id="overlay-example" {...props}>
+            *Telegram Handle is required
+          </Tooltip>
+        )}
+      </Overlay>
+
       <p>
         <Link to="/">
           <Image
@@ -225,7 +256,7 @@ export default function Menu() {
           <p>
             Order status: <strong>{orderStatus === "open" ? <h4 style={{color:"green"}}>Open</h4>: <h4 style={{color:"red"}}>Closed</h4>}</strong>
           </p>
-          <Cart cartItems={cartItems} onCheckout={onCheckout} />
+          <Cart cartItems={cartItems} onCheckout={handleShow}/>
           <div className="cart__container">
             {foods.map((food) => {
               return (
@@ -250,6 +281,7 @@ export default function Menu() {
                   name="title"
                   value={user}
                   onChange={(e) => setUser(e.target.value)}
+                  ref ={target}
                 />
               </InputGroup>
             </Form.Label>
@@ -274,9 +306,9 @@ export default function Menu() {
               />
             </Form.Label>
             <div>
-              <Button type="submit" size="sm" className="mt-2 mb-2">
+              <Button type="submit" size="sm" className="mt-2 mb-3" style={{width:130}}>
                 {" "}
-                Select
+                Add to Menu
               </Button>
             </div>
           </Form>
@@ -325,6 +357,22 @@ export default function Menu() {
       <div className="text-center">
         <Button variant="secondary" onClick={() => navigate("/")} className="mb-2 mt-2">Home</Button>
       </div>
+
+
+      <Modal show={showPopup} onHide={handleClose}>
+        <Modal.Header closeButton>
+          <Modal.Title>Confirm Order</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>You will not be able to change your order after confirming. Click Proceed to confirm. </Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={handleClose}>
+            Close
+          </Button>
+          <Button variant="success" onClick={onCheckout}>
+            Proceed
+          </Button>
+        </Modal.Footer>
+      </Modal>
     </>
   );
 }

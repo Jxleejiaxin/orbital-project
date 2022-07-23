@@ -24,7 +24,7 @@ export default function Signup() {
         }
 
         if (user === "") {
-          return setError("Telegram handle cannot be empty")
+          return setError("Please enter your Telegram Handle")
         }
 
         try {
@@ -62,7 +62,7 @@ export default function Signup() {
                 <Form.Control type="password" ref={passwordRef} required placeholder="Enter your password (min. 6 character)"/>
               </Form.Group>
               <Form.Group id="password-confirm">
-                <Form.Label>Password Confirmation</Form.Label>
+                <Form.Label>Re-enter Password</Form.Label>
                 <Form.Control type="password" ref={passwordConfirmRef} required placeholder="Confirm password"/>
               </Form.Group>
               <Form.Label>
