@@ -47,6 +47,7 @@ export default function History() {
     setShowTable(false);
   }
 
+
   const totalPrice = cartArray.reduce((sum,item)=>sum + item.price * item.quantity,0);
 
   return (
@@ -59,11 +60,11 @@ export default function History() {
           {timeArray.length === 0 ? <h3 className='text-muted mt-4' style={{fontFamily:"Trebuchet MS"}}>No History Found</h3> : <h1></h1>} 
 
           {showAllHistory && (
-            <ListGroup as="ol" numbered className='mb-4 mt-4'>
+            <ListGroup as="ol" numbered className='mb-4 mt-4' style={{maxHeight:400, overflowY:'scroll'}} variant='flush'> 
               {timeArray.map(item => {
                 return(
                   
-                    <ListGroup.Item as="li" key={item.key} id={item.key} action onClick={onClick}>{item.key}</ListGroup.Item>
+                    <ListGroup.Item as="li"  key={item.key} id={item.key} action variant="light" onClick={onClick}>{item.key}</ListGroup.Item>
                   
                 )
               })}

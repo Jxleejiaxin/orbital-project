@@ -180,19 +180,19 @@ export default function Menu() {
           <Toast.Body className='text-white'>Order has been closed!</Toast.Body>
         </Toast>
       </ToastContainer> 
-      
+      <p>
+        <Link to="/">
+          <Image
+            src="/logo.png"
+            alt=""
+            width="150"
+            className="rounded mx-auto d-block"
+          />
+        </Link>
+      </p>
       {showToken && (
         <div>
-          <p>
-            <Link to="/">
-              <Image
-                src="/logo.png"
-                alt=""
-                width="150"
-                className="rounded mx-auto d-block"
-              />
-            </Link>
-          </p>
+          
           <InputGroup className="mb-3">
             <Form.Control
               type="text"
