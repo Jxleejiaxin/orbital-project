@@ -105,10 +105,11 @@ export default function Menu() {
     if (!orderSnap.exists() || exist || orderSnap.data().status === "closed") {
       return;
     } else {
+      const food = {title:foodName, price:foodPrice}
       await updateDoc(orderRef, {
-        cart: arrayUnion({ title: foodName, price: foodPrice }),
+        cart: arrayUnion(food),
       });
-      console.log(foods);
+      console.log(food);
     }
   };
 
@@ -286,7 +287,7 @@ export default function Menu() {
               </InputGroup>
             </Form.Label>
             <Form.Label>
-              Name of food:
+              Name of item:
               <Form.Control
                 type="text"
                 name="title"
