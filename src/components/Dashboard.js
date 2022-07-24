@@ -71,7 +71,7 @@ export default function Dashboard() {
                   </div> : 
                   <div className="text-center mt-2">
                     <OverlayTrigger
-                      placement="right"
+                      placement="bottom"
                       delay={{show: 250, hide: 400}}
                       overlay={<Tooltip id="tooltip-disabled">Guest accounts do not have access to history!</Tooltip>}
                     >
