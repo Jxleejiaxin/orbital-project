@@ -204,7 +204,7 @@ export default function Menu() {
       </ToastContainer> 
 
       {/*error message tooltip shown when order confirmed without a telegram handle*/}
-      <Overlay target={target.current} show={showHandleError} placement="right">
+      <Overlay target={target.current} show={showHandleError} placement="bottom">
         {(props) => (
           <Tooltip id="overlay-example" {...props}>
             *Telegram Handle is required
